@@ -30,7 +30,7 @@ public abstract class DynamoBuilder : IDynamoBuilder
 
     public void AddValueExpression(string key, AttributeValue value, DynamoDBEntry? dynamoDbEntry)
     {
-        if (Values.ContainsKey(key))
+        if (string.IsNullOrEmpty(key) || Values.ContainsKey(key))
             return;
 
         Values.Add(key, value);
