@@ -1,0 +1,2 @@
+# DynaMight
+A DynamoDB Library
