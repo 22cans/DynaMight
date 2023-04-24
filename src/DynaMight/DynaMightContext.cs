@@ -4,6 +4,7 @@ using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using DynaMight.BatchWrapper;
 using DynaMight.Builders;
+using DynaMight.Converters;
 using DynaMight.Pagination;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -54,7 +55,7 @@ namespace DynaMight
             var queryConfig = queryBuilder.Build(false);
             var asyncSearch = FromQueryAsync<T>(queryConfig);
             var items = await asyncSearch.GetNextSetAsync(cancellationToken);
-            return new Page<T>(GetPaginationToken(asyncSearch), items);
+            return items?.Any() ?? false ? new Page<T>(GetPaginationToken(asyncSearch), items) : Page<T>.Empty();
         }
 
         public async Task<Page<T>> GetFilteredPage<T>(IQueryBuilder queryBuilder, CancellationToken cancellationToken)
@@ -73,6 +74,9 @@ namespace DynaMight
             if (items.Count <= queryConfig.Limit && asyncSearch.IsDone)
                 pageTokenModel = null;
 
+            if (!items.Any())
+                return Page<T>.Empty();
+                
             return items.Count < queryConfig.Limit
                 ? new Page<T>(GetPaginationToken(asyncSearch), items)
                 : Crop(pageTokenModel, items, queryConfig.Limit);

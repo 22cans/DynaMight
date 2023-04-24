@@ -8,5 +8,5 @@ public sealed record Page<T>(string PageToken, IList<T>? Results)
         return response;
     }
 
-    public static Page<T> Empty() => new Page<T>(string.Empty, Array.Empty<T>());
+    public static Page<T> Empty() => new(string.Empty, Array.Empty<T>());
 }

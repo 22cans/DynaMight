@@ -1,3 +1,5 @@
+using DynaMight.Converters;
+
 namespace DynaMight.AtomicOperations;
 
 public class SetAtomicOperation<T> : AtomicOperation<T>

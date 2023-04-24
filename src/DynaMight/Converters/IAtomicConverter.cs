@@ -1,6 +1,6 @@
 using Amazon.DynamoDBv2.Model;
 
-namespace DynaMight;
+namespace DynaMight.Converters;
 
 #pragma warning disable CA2252
 public interface IAtomicConverter<out T>

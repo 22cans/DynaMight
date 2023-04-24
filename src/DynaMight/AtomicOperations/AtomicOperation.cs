@@ -1,5 +1,6 @@
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
+using DynaMight.Converters;
 
 namespace DynaMight.AtomicOperations;
 

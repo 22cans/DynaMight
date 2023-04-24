@@ -2,6 +2,7 @@ using Amazon.DynamoDBv2.DataModel;
 using DynaMight.AtomicOperations;
 using DynaMight.BatchWrapper;
 using DynaMight.Builders;
+using DynaMight.Converters;
 using DynaMight.Pagination;
 
 namespace DynaMight;
