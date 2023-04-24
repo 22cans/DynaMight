@@ -35,12 +35,11 @@ namespace DynaMight
             => new DefaultMultiTableBatchWrite(base.CreateMultiTableBatchWrite(), batches);
 
         public async Task<T> ExecuteAtomicOperation<T>(IAtomicBuilder requestBuilder,
-            CancellationToken cancellationToken)
-            where T : IAtomicConverter<T>
+            CancellationToken cancellationToken) where T : new()
         {
             var request = requestBuilder.SetTableName<T>(_config).Build();
             var response = await _client.UpdateItemAsync(request, cancellationToken);
-            return T.ConvertFromAtomic(response.Attributes);
+            return AttributeValueDictionaryConverter.ConvertFrom<T>(response.Attributes);
         }
 
         public async Task<List<T>> GetAll<T>(IQueryBuilder queryBuilder, CancellationToken cancellationToken)

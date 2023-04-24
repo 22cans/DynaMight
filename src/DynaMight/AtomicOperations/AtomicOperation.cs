@@ -17,5 +17,5 @@ public abstract class AtomicOperation<T> : IAtomicOperation
     public virtual (string key, string value) GetNameExpression() => ($"#{FieldName}", FieldName);
 
     public virtual (string, AttributeValue, DynamoDBEntry?) GetValueExpression()
-        => ($":{FieldName}", AttributeValue, AttributeValueConverter.ToDynamoDbEntry(Value));
+        => ($":{FieldName}", AttributeValue, DynamoValueConverter.ToDynamoDbEntry(Value));
 }

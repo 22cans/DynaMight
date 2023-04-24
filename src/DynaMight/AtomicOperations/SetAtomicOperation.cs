@@ -9,7 +9,7 @@ public class SetAtomicOperation<T> : AtomicOperation<T>
     public SetAtomicOperation(string fieldName, T value)
     {
         FieldName = fieldName;
-        AttributeValue = AttributeValueConverter.From(value);
+        AttributeValue = DynamoValueConverter.From(value);
         Value = value;
     }
 

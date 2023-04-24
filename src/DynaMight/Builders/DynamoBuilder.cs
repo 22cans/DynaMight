@@ -40,7 +40,7 @@ public abstract class DynamoBuilder : IDynamoBuilder
 
     protected void SetKey<TK>(string name, TK value)
     {
-        Keys.Add(name, AttributeValueConverter.From(value));
+        Keys.Add(name, DynamoValueConverter.From(value));
     }
 
     protected void UseParenthesis() => _useParenthesis = true;

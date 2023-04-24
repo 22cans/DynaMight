@@ -18,8 +18,8 @@ internal class FieldValueDynamoCriteria<T> : DynamoCriteria
     {
         base.UseAtomicOperationBuilder(builder);
 
-        builder.AddValueExpression(_keyName, AttributeValueConverter.From(_value),
-            AttributeValueConverter.ToDynamoDbEntry(_value));
+        builder.AddValueExpression(_keyName, DynamoValueConverter.From(_value),
+            DynamoValueConverter.ToDynamoDbEntry(_value));
     }
 
     public override string ToString()

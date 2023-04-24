@@ -16,5 +16,5 @@ public class IncrementByAtomicOperation<T> : AtomicOperation<T>
     }
 
     public override (string, AttributeValue, DynamoDBEntry?) GetValueExpression()
-        => ($":{FieldName}Increment", AttributeValue, AttributeValueConverter.ToDynamoDbEntry(Value));
+        => ($":{FieldName}Increment", AttributeValue, DynamoValueConverter.ToDynamoDbEntry(Value));
 }

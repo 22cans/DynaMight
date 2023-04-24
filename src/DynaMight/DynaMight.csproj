@@ -6,6 +6,12 @@
         <Nullable>enable</Nullable>
         <EnablePreviewFeatures>True</EnablePreviewFeatures>
         <LangVersion>11.0</LangVersion>
+        <Authors>22cans</Authors>
+        <Description>DynaMight is a helper library to query and do atomic operations in DynamoDB.</Description>
+        <PackageProjectUrl>https://github.com/22cans/DynaMight</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/22cans/DynaMight/blob/main/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/22cans/DynaMight</RepositoryUrl>
+        <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     </PropertyGroup>
 
     <ItemGroup>
