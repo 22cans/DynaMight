@@ -66,4 +66,4 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: publish.zip
-        path: ${{ github.workspace }}/DynaMight/src/DynaMight/bin/Release/DynaMight.1.0.0.nupkg
+        path: ${{ github.workspace }}/src/DynaMight/bin/Release/DynaMight.1.0.0.nupkg
