@@ -1,0 +1,23 @@
+name: Push Action
+
+on:
+  push:
+    branches: 
+      - 'main'
+
+# env:
+#   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+jobs:
+  build_and_test:
+    name: Build and Test
+    uses: ./.github/workflows/build_and_test.yml
+    with:
+      configuration: Release
+
+  post_deploy:
+    name: Post deploy actions
+    needs: [build_and_test]
+    uses: ./.github/workflows/post_deploy.yml
+    secrets: inherit

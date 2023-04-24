@@ -1,0 +1,69 @@
+on:
+  workflow_call:
+    inputs:
+      configuration:
+        type: string    
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      NEED_DEPLOY_API: ${{ steps.changed_files_api.outputs.any_changed }}
+      NEED_DEPLOY_SCHEDULER: ${{ steps.changed_files_scheduler.outputs.any_changed }}
+      SHORT_SHA: ${{ steps.short_sha.outputs.SHORT_SHA }}
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --no-restore -c ${{ inputs.configuration }}
+      
+    - name: Test
+      if: github.event_name == 'pull_request'
+      run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+      
+    - name: Code Coverage Report
+      if: github.event_name == 'pull_request'
+      uses: irongut/CodeCoverageSummary@v1.3.0
+      with:
+        filename: coverage/**/coverage.cobertura.xml
+        badge: true
+        fail_below_min: true
+        format: markdown
+        hide_branch_rate: false
+        hide_complexity: false
+        indicators: true
+        output: both
+        thresholds: '25 75'
+
+    - name: Add Coverage PR Comment
+      if: github.event_name == 'pull_request'
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        recreate: true
+        path: code-coverage-results.md
+
+    - name: Pack
+      if: github.event_name == 'push'
+      run: |
+        dotnet pack --configuration Release
+
+    # - name: Nuget Push
+    #   if: github.event_name == 'push'
+    #   run: |
+    #     dotnet nuget push
+
+    - name: Upload API zip
+      if:  github.event_name == 'push'
+      uses: actions/upload-artifact@v3
+      with:
+        name: publish.zip
+        path: ${{ github.workspace }}/DynaMight/src/DynaMight/bin/Release/DynaMight.1.0.0.nupkg
