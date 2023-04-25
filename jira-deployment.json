@@ -11,8 +11,8 @@
       "state": "__DEPLOYMENTS_STATE__",
       "pipeline": {
         "id": "push",
-        "displayName": "Legacy Lambda",
-        "url": "https://github.com/22cans/legacy_lambda/actions/workflows/push.yml"
+        "displayName": "DynaMight",
+        "url": "https://github.com/22cans/DynaMight/actions/workflows/push.yml"
       },
       "environment": {
         "id": "__DEPLOYMENTS_ENVIRONMENT_ID__", 

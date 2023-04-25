@@ -29,7 +29,7 @@ jobs:
       - name: Get Success Deploy
         if: success()
         run: |
-          echo "STATUS=success" >> "$GITHUB_ENV"
+          echo "STATUS=successful" >> "$GITHUB_ENV"
 
       - name: Get Success Deploy
         if: failure()
@@ -45,8 +45,8 @@ jobs:
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_DEPLOYMENTSEQUENCENUMBER__/${{ github.run_number }}/g')
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_ISSUEKEYS__/${{ steps.get_issues.outputs.ISSUES }}/g')          
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_DISPLAYNAME__/Publish version ${{ inputs.VERSION }}/g')
-          PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_URL__/https:\/\/github.com\/22cans\/legacy_lambda\/actions\/runs\/${{ github.run_id }}/g')
-          PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_DESCRIPTION__/${{ github.event.head_commit }}/g')
+          PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_URL__/https:\/\/github.com\/22cans\/DynaMight\/actions\/runs\/${{ github.run_id }}/g')
+          PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_DESCRIPTION__/${{ github.event.body }}/g')
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_LASTUPDATED__/${{ steps.get_issues.outputs.DATE }}/g')
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_ENVIRONMENT_ID__/Production/g')
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_ENVIRONMENT_DISPLAYNAME__/Production/g')
