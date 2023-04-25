@@ -2,15 +2,13 @@ on:
   workflow_call:
     inputs:
       configuration:
-        type: string    
+        type: string
+      version:
+        type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      NEED_DEPLOY_API: ${{ steps.changed_files_api.outputs.any_changed }}
-      NEED_DEPLOY_SCHEDULER: ${{ steps.changed_files_scheduler.outputs.any_changed }}
-      SHORT_SHA: ${{ steps.short_sha.outputs.SHORT_SHA }}
 
     steps:
     - uses: actions/checkout@v3
@@ -24,11 +22,11 @@ jobs:
       run: dotnet restore
       
     - name: Build
-      run: dotnet build --no-restore -c ${{ inputs.configuration }}
+      run: dotnet build --no-restore -c ${{ inputs.configuration }} /p:Version=${{ inputs.version }}
       
     - name: Test
       if: github.event_name == 'pull_request'
-      run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage
+      run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage /p:Version=${{ inputs.version }}
       
     - name: Code Coverage Report
       if: github.event_name == 'pull_request'
@@ -54,16 +52,9 @@ jobs:
     - name: Pack
       if: github.event_name == 'push'
       run: |
-        dotnet pack --configuration Release
+        dotnet pack --configuration Release /p:Version=${{ inputs.version }} --no-build --output .
 
-    # - name: Nuget Push
-    #   if: github.event_name == 'push'
-    #   run: |
-    #     dotnet nuget push
-
-    - name: Upload API zip
-      if:  github.event_name == 'push'
-      uses: actions/upload-artifact@v3
-      with:
-        name: publish.zip
-        path: ${{ github.workspace }}/src/DynaMight/bin/Release/DynaMight.1.0.0.nupkg
+    - name: Nuget Push
+      if: github.event_name == 'release'
+      run: |
+        dotnet nuget push DynaMight.${{ inputs.version }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }}
