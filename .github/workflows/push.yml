@@ -21,3 +21,5 @@ jobs:
     needs: [build_and_test]
     uses: ./.github/workflows/post_deploy.yml
     secrets: inherit
+    with:
+      VERSION: ${{ needs.build_and_test.outputs.VERSION }}
