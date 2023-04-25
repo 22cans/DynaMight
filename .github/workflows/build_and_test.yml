@@ -23,7 +23,8 @@ jobs:
 
     - name:  Get Definitive Version
       run: |
-        echo "VERSION=${${{ env.TEMP_VERSION }}:1}" >> "$GITHUB_ENV"
+        VERSION_NUMBER="${{ env.TEMP_VERSION }}"
+        echo "VERSION=${VERSION_NUMBER:1}" >> "$GITHUB_ENV"
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
