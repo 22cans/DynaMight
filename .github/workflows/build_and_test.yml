@@ -14,7 +14,7 @@ jobs:
     - name: Get Version Pull Request / Push
       if: github.event_name == 'pull_request' || github.event_name == 'push'
       run: |
-        echo "TEMP_VERSION=0.0.0" >> "$GITHUB_ENV"
+        echo "TEMP_VERSION=v0.0.0" >> "$GITHUB_ENV"
 
     - name: Get Version Release
       if: github.event_name == 'release'
@@ -23,7 +23,7 @@ jobs:
 
     - name:  Get Definitive Version
       run: |
-        echo "VERSION=${{ env.TEMP_VERSION }}" >> "$GITHUB_ENV"
+        echo "VERSION=${${{ env.TEMP_VERSION }}:1}" >> "$GITHUB_ENV"
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
