@@ -6,18 +6,18 @@ public abstract class UnaryFunctionDynamoCriteria : DynamoCriteria
 {
     protected abstract string FunctionName { get; }
 
-    private readonly string _fieldName;
+    protected readonly string FieldName;
 
-    public UnaryFunctionDynamoCriteria(string fieldName)
+    protected UnaryFunctionDynamoCriteria(string fieldName)
     {
-        _fieldName = fieldName;
+        FieldName = fieldName;
     }
 
     public override void UseAtomicOperationBuilder(IDynamoBuilder builder)
     {
         base.UseAtomicOperationBuilder(builder);
-        builder.AddNameExpression((key: $"#{_fieldName}", value: _fieldName));
+        builder.AddNameExpression((key: $"#{FieldName}", value: FieldName));
     }
 
-    public override string ToString() => $"{FunctionName}(#{_fieldName})";
+    public override string ToString() => $"{FunctionName}(#{FieldName})";
 }
