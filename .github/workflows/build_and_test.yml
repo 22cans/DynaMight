@@ -3,8 +3,6 @@ on:
     inputs:
       configuration:
         type: string
-      version:
-        type: string
 
 jobs:
   build:
@@ -12,6 +10,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+
+    - name: Get Version Pull Request / Push
+      if: github.event_name == 'pull_request' || github.event_name == 'push'
+      run: |
+        echo "TEMP_VERSION=0.0.0" >> "$GITHUB_ENV"
+
+    - name: Get Version Release
+      if: github.event_name == 'release'
+      run: |
+        echo "TEMP_VERSION=${{ github.event.release.name }}" >> "$GITHUB_ENV"
+
+    - name:  Get Definitive Version
+      run: |
+        echo "VERSION=${{ env.TEMP_VERSION }}" >> "$GITHUB_ENV"
 
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -22,11 +34,11 @@ jobs:
       run: dotnet restore
       
     - name: Build
-      run: dotnet build --no-restore -c ${{ inputs.configuration }} /p:Version=${{ inputs.version }}
+      run: dotnet build --no-restore -c ${{ inputs.configuration }} /p:Version=${{ env.VERSION }}
       
     - name: Test
       if: github.event_name == 'pull_request'
-      run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage /p:Version=${{ inputs.version }}
+      run: dotnet test --no-build --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./coverage /p:Version=${{ env.VERSION }}
       
     - name: Code Coverage Report
       if: github.event_name == 'pull_request'
@@ -52,9 +64,9 @@ jobs:
     - name: Pack
       if: github.event_name == 'push'
       run: |
-        dotnet pack --configuration Release /p:Version=${{ inputs.version }} --no-build --output .
+        dotnet pack --configuration Release /p:Version=${{ env.VERSION }} --no-build --output .
 
     - name: Nuget Push
       if: github.event_name == 'release'
       run: |
-        dotnet nuget push DynaMight.${{ inputs.version }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }}
+        dotnet nuget push DynaMight.${{ env.VERSION }}.nupkg --api-key ${{ secrets.NUGET_API_KEY }}
