@@ -62,7 +62,7 @@ jobs:
         path: code-coverage-results.md
 
     - name: Pack
-      if: github.event_name == 'push'
+      if: github.event_name == 'release'
       run: |
         dotnet pack --configuration Release /p:Version=${{ env.VERSION }} --no-build --output .
 
