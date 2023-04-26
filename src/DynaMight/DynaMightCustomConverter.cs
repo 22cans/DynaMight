@@ -50,24 +50,8 @@ public static class DynaMightCustomConverter
 
     public static void RegisterClass<T>() where T : new()
     {
-        void NullableAction(object obj, PropertyInfo prop, IReadOnlyDictionary<string, AttributeValue> dict)
-        {
-            // Check if dict DOES NOT contains the property
-            if (!dict.ContainsKey(prop.Name))
-            {
-                //https://devblogs.microsoft.com/dotnet/announcing-net-6-preview-7/#libraries-reflection-apis-for-nullability-information
-                var context = new NullabilityInfoContext();
-                var propInfo = context.Create(prop);
-                if (propInfo.WriteState is not NullabilityState.Nullable)
-                    throw new KeyNotFoundException();
-
-                return;
-            }
-
-            prop.SetValue(obj, AttributeValueDictionaryConverter.ConvertFrom<T>(dict[prop.Name].M));
-        }
-
-        AttributeValueDictionaryConverter.AddCustomConverter<T>(NullableAction);
+        AttributeValueDictionaryConverter.AddCustomConverter<T>((obj, prop, dict) =>
+            prop.SetValue(obj, AttributeValueDictionaryConverter.ConvertFrom<T>(dict[prop.Name].M)));
     }
 
     // ReSharper disable once MemberCanBePrivate.Global
@@ -76,13 +60,6 @@ public static class DynaMightCustomConverter
         Func<T, AttributeValue> attributeValue,
         Func<T, DynamoDBEntry> dynamoDbEntry)
     {
-        void NullableAction(object obj, PropertyInfo prop, IReadOnlyDictionary<string, AttributeValue> dict)
-        {
-            if (!dict.ContainsKey(prop.Name)) return;
-
-            action(obj, prop, dict);
-        }
-
         AttributeValueDictionaryConverter.AddCustomConverter<T>(action);
         CustomDynamoValueConverter.AddCustomConverter(attributeValue, dynamoDbEntry);
     }
