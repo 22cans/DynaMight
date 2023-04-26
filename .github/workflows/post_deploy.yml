@@ -46,7 +46,7 @@ jobs:
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_ISSUEKEYS__/${{ steps.get_issues.outputs.ISSUES }}/g')          
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_DISPLAYNAME__/Publish version ${{ inputs.VERSION }}/g')
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_URL__/https:\/\/github.com\/22cans\/DynaMight\/actions\/runs\/${{ github.run_id }}/g')
-          PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_DESCRIPTION__/${{ github.event.release.body }}/g')
+          PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_DESCRIPTION__/${{ inputs.VERSION }}/g')
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_LASTUPDATED__/${{ steps.get_issues.outputs.DATE }}/g')
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_ENVIRONMENT_ID__/Production/g')
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_ENVIRONMENT_DISPLAYNAME__/Production/g')
