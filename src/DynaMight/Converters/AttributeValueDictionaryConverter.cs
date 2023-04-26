@@ -17,6 +17,16 @@ public abstract class AttributeValueDictionaryConverter
     {
         ValueSetters[typeof(T)] = new AttributeValueDictionaryConverter<T>(action);
     }
+    
+    public static void AddCustomConverter(Type customType,
+        Action<object, PropertyInfo, IReadOnlyDictionary<string, AttributeValue>> action)
+    {
+        Type[] args = { customType };
+        var nullable = typeof(Nullable<>).MakeGenericType(args);
+        var attribute = typeof(AttributeValueDictionaryConverter<>).MakeGenericType(nullable);
+        var t = Activator.CreateInstance(attribute, action);
+        ValueSetters[nullable] = (AttributeValueDictionaryConverter)t! ?? throw new InvalidOperationException();
+    }
 
     public static T ConvertFrom<T>(IReadOnlyDictionary<string, AttributeValue> dict) where T : new()
     {

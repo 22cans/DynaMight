@@ -10,11 +10,10 @@ public class AttributeValueDictionaryConverterTests
     [Fact]
     public void ConvertClassWithNulls()
     {
-        AttributeValueDictionaryConverter.AddCustomConverter<DynaMightTestClass.TestEnum>((obj, prop, dict) =>
-            prop.SetValue(obj, (DynaMightTestClass.TestEnum)int.Parse(dict[prop.Name].N)));
-        AttributeValueDictionaryConverter.AddCustomConverter<DynaMightTestClass.TestEnum?>((obj, prop, dict) =>
-            prop.SetValue(obj,
-                dict.Get<DynaMightTestClass.TestEnum?>(prop.Name, x => (DynaMightTestClass.TestEnum)int.Parse(x.N))));
+        // DynaMightCustomConverter.RegisterEnum<DynaMightTestClass.TestEnum>();
+        // DynaMightCustomConverter.RegisterEnum<DynaMightTestClass.TestAttributeEnum>();
+
+        DynaMightCustomConverter.LoadAndRegister();
 
         var result = AttributeValueDictionaryConverter.ConvertFrom<DynaMightTestClass>(
             new Dictionary<string, AttributeValue>
@@ -25,13 +24,15 @@ public class AttributeValueDictionaryConverterTests
                 { "DecimalValue", new AttributeValue { N = "200" } },
                 { "LongValue", new AttributeValue { N = "300" } },
                 { "BoolValue", new AttributeValue { BOOL = true } },
+                { "TestAttributeEnumValue", new AttributeValue { N = "2" } },
             });
 
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(new DynaMightTestClass
         {
             StringValue = "test", TestEnumValue = DynaMightTestClass.TestEnum.Value0, IntValue = 100,
-            DecimalValue = 200, LongValue = 300, BoolValue = true
+            DecimalValue = 200, LongValue = 300, BoolValue = true,
+            TestAttributeEnumValue = DynaMightTestClass.TestAttributeEnum.ValueWithAttribute2
         });
     }
 
@@ -58,6 +59,8 @@ public class AttributeValueDictionaryConverterTests
                 { "LongNullableValue", new AttributeValue { N = "350" } },
                 { "BoolNullableValue", new AttributeValue { BOOL = false } },
                 { "TestEnumNullableValue", new AttributeValue { N = "1" } },
+                { "TestAttributeEnumValue", new AttributeValue { N = "2" } },
+                { "TestAttributeNullableEnumValue", new AttributeValue { N = "1" } },
             });
 
         result.Should().NotBeNull();
@@ -66,7 +69,9 @@ public class AttributeValueDictionaryConverterTests
             StringValue = "test", TestEnumValue = DynaMightTestClass.TestEnum.Value0, IntValue = 100,
             DecimalValue = 200, LongValue = 300, BoolValue = true, IntNullableValue = 150, DecimalNullableValue = 250,
             LongNullableValue = 350, BoolNullableValue = false,
-            TestEnumNullableValue = DynaMightTestClass.TestEnum.Value1
+            TestEnumNullableValue = DynaMightTestClass.TestEnum.Value1,
+            TestAttributeEnumValue = DynaMightTestClass.TestAttributeEnum.ValueWithAttribute2,
+            TestAttributeEnumNullableValue = DynaMightTestClass.TestAttributeEnum.ValueWithAttribute1
         });
     }
 }
