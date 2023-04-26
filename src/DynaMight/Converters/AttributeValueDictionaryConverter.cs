@@ -37,8 +37,21 @@ public abstract class AttributeValueDictionaryConverter
         {
             if (property.GetCustomAttributes(typeof(DynamoDBIgnoreAttribute)).Any())
                 continue;
-            
-            if (AttributeValueDictionaryConverter<T>.DefaultSetters.TryGetValue(property.PropertyType, out var setter))
+
+            if (!dict.ContainsKey(property.Name))
+            {
+                //https://devblogs.microsoft.com/dotnet/announcing-net-6-preview-7/#libraries-reflection-apis-for-nullability-information
+                var context = new NullabilityInfoContext();
+                var propInfo = context.Create(property);
+                if (propInfo.WriteState is not NullabilityState.Nullable)
+                    throw new KeyNotFoundException(property.Name);
+
+                continue;
+            }
+
+            var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+            if (AttributeValueDictionaryConverter<T>.DefaultSetters.TryGetValue(propertyType, out var setter))
             {
                 setter(obj, property, dict);
                 continue;
@@ -48,7 +61,7 @@ public abstract class AttributeValueDictionaryConverter
 
             try
             {
-                setValue = ValueSetters[property.PropertyType] ??
+                setValue = ValueSetters[propertyType] ??
                            throw new NotSupportedException(
                                $"Type '{property.PropertyType}' is not yet supported by atomic deserialization.");
             }
@@ -92,24 +105,7 @@ public class AttributeValueDictionaryConverter<T> : AttributeValueDictionaryConv
             { typeof(decimal), (obj, prop, dict) => prop.SetValue(obj, decimal.Parse(dict[prop.Name].N)) },
             { typeof(DateTime), (obj, prop, dict) => prop.SetValue(obj, DateTime.Parse(dict[prop.Name].S)) },
 
-            // Nullable types
-            { typeof(bool?), (obj, prop, dict) => prop.SetValue(obj, dict.Get<bool?>(prop.Name, x => x.BOOL)) },
-            { typeof(int?), (obj, prop, dict) => prop.SetValue(obj, dict.Get<int?>(prop.Name, x => int.Parse(x.N))) },
-            {
-                typeof(long?), (obj, prop, dict) => prop.SetValue(obj, dict.Get<long?>(prop.Name, x => long.Parse(x.N)))
-            },
-            {
-                typeof(double?),
-                (obj, prop, dict) => prop.SetValue(obj, dict.Get<double?>(prop.Name, x => double.Parse(x.N)))
-            },
-            {
-                typeof(decimal?),
-                (obj, prop, dict) => prop.SetValue(obj, dict.Get<decimal?>(prop.Name, x => decimal.Parse(x.N)))
-            },
-            {
-                typeof(DateTime?),
-                (obj, prop, dict) => prop.SetValue(obj, dict.Get<DateTime?>(prop.Name, x => DateTime.Parse(x.S)))
-            },
+            { typeof(List<string>), (obj, prop, dict) => prop.SetValue(obj, dict[prop.Name].SS) },
         };
     }
 

@@ -84,8 +84,6 @@ public static class DynaMightCustomConverter
         }
 
         AttributeValueDictionaryConverter.AddCustomConverter<T>(action);
-        AttributeValueDictionaryConverter.AddCustomConverter(typeof(T), NullableAction);
         CustomDynamoValueConverter.AddCustomConverter(attributeValue, dynamoDbEntry);
-        CustomDynamoValueConverter.AddCustomConverter<T?>(attributeValue, dynamoDbEntry);
     }
 }

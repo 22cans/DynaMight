@@ -49,11 +49,7 @@ public class AttributeValueDictionaryConverterTests
     [Fact]
     public void ConvertClassWithFilledNulls()
     {
-        AttributeValueDictionaryConverter.AddCustomConverter<DynaMightTestClass.TestEnum>((obj, prop, dict) =>
-            prop.SetValue(obj, (DynaMightTestClass.TestEnum)int.Parse(dict[prop.Name].N)));
-        AttributeValueDictionaryConverter.AddCustomConverter<DynaMightTestClass.TestEnum?>((obj, prop, dict) =>
-            prop.SetValue(obj,
-                dict.Get<DynaMightTestClass.TestEnum?>(prop.Name, x => (DynaMightTestClass.TestEnum)int.Parse(x.N))));
+        DynaMightCustomConverter.LoadAndRegister();
 
         var result = AttributeValueDictionaryConverter.ConvertFrom<DynaMightTestClass>(
             new Dictionary<string, AttributeValue>
@@ -70,7 +66,25 @@ public class AttributeValueDictionaryConverterTests
                 { "BoolNullableValue", new AttributeValue { BOOL = false } },
                 { "TestEnumNullableValue", new AttributeValue { N = "1" } },
                 { "TestAttributeEnumValue", new AttributeValue { N = "2" } },
-                { "TestAttributeNullableEnumValue", new AttributeValue { N = "1" } },
+                { "TestAttributeEnumNullableValue", new AttributeValue { N = "1" } },
+                {
+                    "InternalClassValue", new AttributeValue
+                    {
+                        M = new Dictionary<string, AttributeValue>
+                        {
+                            { "InternalString", new AttributeValue { S = "internal string value" } }
+                        }
+                    }
+                },
+                {
+                    "InternalClassNullableValue", new AttributeValue
+                    {
+                        M = new Dictionary<string, AttributeValue>
+                        {
+                            { "InternalString", new AttributeValue { S = "another string value" } }
+                        }
+                    }
+                }
             });
 
         result.Should().NotBeNull();
@@ -81,7 +95,9 @@ public class AttributeValueDictionaryConverterTests
             LongNullableValue = 350, BoolNullableValue = false,
             TestEnumNullableValue = DynaMightTestClass.TestEnum.Value1,
             TestAttributeEnumValue = DynaMightTestClass.TestAttributeEnum.ValueWithAttribute2,
-            TestAttributeEnumNullableValue = DynaMightTestClass.TestAttributeEnum.ValueWithAttribute1
+            TestAttributeEnumNullableValue = DynaMightTestClass.TestAttributeEnum.ValueWithAttribute1,
+            InternalClassValue = new DynaMightTestClass.InternalClass { InternalString = "internal string value" },
+            InternalClassNullableValue = new DynaMightTestClass.InternalClass { InternalString = "another string value" }
         });
     }
 }
