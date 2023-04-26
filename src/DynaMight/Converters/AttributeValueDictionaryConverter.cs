@@ -70,7 +70,7 @@ public class AttributeValueDictionaryConverter<T> : AttributeValueDictionaryConv
         DefaultSetters = new Dictionary<Type, Action<T, PropertyInfo, IReadOnlyDictionary<string, AttributeValue>>>
         {
             // Basic types
-            { typeof(string), (obj, prop, dict) => prop.SetValue(obj, dict[prop.Name].S) },
+            { typeof(string), (obj, prop, dict) => prop.SetValue(obj, dict.Get<string?>(prop.Name, x => x.S)) },
             { typeof(bool), (obj, prop, dict) => prop.SetValue(obj, dict[prop.Name].BOOL) },
             { typeof(int), (obj, prop, dict) => prop.SetValue(obj, int.Parse(dict[prop.Name].N)) },
             { typeof(long), (obj, prop, dict) => prop.SetValue(obj, long.Parse(dict[prop.Name].N)) },

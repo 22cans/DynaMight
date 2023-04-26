@@ -64,8 +64,8 @@ public class DynamoValueConverterTests
 
 
     [Theory]
+    [InlineData(DynaMightTestClass.TestEnum.Value0)]
     [InlineData(DynaMightTestClass.TestEnum.Value1)]
-    [InlineData(DynaMightTestClass.TestEnum.Value2)]
     public void AttributeValue_WhenReceiveCustomEnum(DynaMightTestClass.TestEnum value)
     {
         CustomDynamoValueConverter.AddCustomConverter<DynaMightTestClass.TestEnum>(
