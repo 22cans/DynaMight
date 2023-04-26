@@ -18,6 +18,8 @@ public static class DynaMightCustomConverter
 
                 if (type.IsEnum)
                     RegisterEnum(type);
+                else if (type.IsClass)
+                    RegisterClass(type);
             }
         }
     }
@@ -38,6 +40,37 @@ public static class DynaMightCustomConverter
             r => Convert.ToInt32(r));
     }
 
+    private static void RegisterClass(Type type)
+    {
+        var method = typeof(DynaMightCustomConverter).GetMethod(nameof(RegisterClass),
+            BindingFlags.Public | BindingFlags.Static)!;
+        method = method.MakeGenericMethod(type);
+        method.Invoke(null, null);
+    }
+
+    public static void RegisterClass<T>() where T : new()
+    {
+        void NullableAction(object obj, PropertyInfo prop, IReadOnlyDictionary<string, AttributeValue> dict)
+        {
+            // Check if dict DOES NOT contains the property
+            if (!dict.ContainsKey(prop.Name))
+            {
+                //https://devblogs.microsoft.com/dotnet/announcing-net-6-preview-7/#libraries-reflection-apis-for-nullability-information
+                var context = new NullabilityInfoContext();
+                var propInfo = context.Create(prop);
+                if (propInfo.WriteState is not NullabilityState.Nullable)
+                    throw new KeyNotFoundException();
+
+                return;
+            }
+
+            prop.SetValue(obj, AttributeValueDictionaryConverter.ConvertFrom<T>(dict[prop.Name].M));
+        }
+
+        AttributeValueDictionaryConverter.AddCustomConverter<T>(NullableAction);
+    }
+
+    // ReSharper disable once MemberCanBePrivate.Global
     public static void Register<T>(
         Action<object, PropertyInfo, IReadOnlyDictionary<string, AttributeValue>> action,
         Func<T, AttributeValue> attributeValue,

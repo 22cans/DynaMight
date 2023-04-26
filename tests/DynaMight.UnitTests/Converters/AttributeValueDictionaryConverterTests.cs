@@ -25,6 +25,15 @@ public class AttributeValueDictionaryConverterTests
                 { "LongValue", new AttributeValue { N = "300" } },
                 { "BoolValue", new AttributeValue { BOOL = true } },
                 { "TestAttributeEnumValue", new AttributeValue { N = "2" } },
+                {
+                    "InternalClassValue", new AttributeValue
+                    {
+                        M = new Dictionary<string, AttributeValue>
+                        {
+                            { "InternalString", new AttributeValue { S = "internal string value" } }
+                        }
+                    }
+                }
             });
 
         result.Should().NotBeNull();
@@ -32,7 +41,8 @@ public class AttributeValueDictionaryConverterTests
         {
             StringValue = "test", TestEnumValue = DynaMightTestClass.TestEnum.Value0, IntValue = 100,
             DecimalValue = 200, LongValue = 300, BoolValue = true,
-            TestAttributeEnumValue = DynaMightTestClass.TestAttributeEnum.ValueWithAttribute2
+            TestAttributeEnumValue = DynaMightTestClass.TestAttributeEnum.ValueWithAttribute2,
+            InternalClassValue = new DynaMightTestClass.InternalClass { InternalString = "internal string value" }
         });
     }
 
