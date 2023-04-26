@@ -22,7 +22,7 @@ jobs:
         id: get_issues
         if: success() || failure()
         run: |
-          TICKETS="\""$(git log -1 | grep -io 'LGCBE-[0-9]\+' | sort | uniq | sed ':a; N; $!ba; s/\n/","/g')"\""
+          TICKETS="\""$(github.event.release.body | grep -io 'LGCBE-[0-9]\+' | sort | uniq | sed ':a; N; $!ba; s/\n/","/g')"\""
           echo DATE=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z") >> "$GITHUB_OUTPUT"
           echo "ISSUES=$TICKETS" >> "$GITHUB_OUTPUT"
 
@@ -46,7 +46,7 @@ jobs:
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_ISSUEKEYS__/${{ steps.get_issues.outputs.ISSUES }}/g')          
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_DISPLAYNAME__/Publish version ${{ inputs.VERSION }}/g')
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_URL__/https:\/\/github.com\/22cans\/DynaMight\/actions\/runs\/${{ github.run_id }}/g')
-          PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_DESCRIPTION__/${{ github.event.body }}/g')
+          PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_DESCRIPTION__/${{ github.event.release.body }}/g')
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_LASTUPDATED__/${{ steps.get_issues.outputs.DATE }}/g')
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_ENVIRONMENT_ID__/Production/g')
           PAYLOAD=$(echo $PAYLOAD | sed 's/__DEPLOYMENTS_ENVIRONMENT_DISPLAYNAME__/Production/g')
