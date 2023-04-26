@@ -1,3 +1,4 @@
+using Amazon.DynamoDBv2.DataModel;
 using DynaMight.Converters;
 
 namespace DynaMight.UnitTests;
@@ -21,6 +22,9 @@ public class DynaMightTestClass
     public InternalClass InternalClassValue { get; set; } = default!;
     public InternalClass? InternalClassNullableValue { get; set; }
     
+    [DynamoDBIgnore]
+    public InternalClassNotSerializable? IgnoreClass { get; set; } 
+    
     [DynaMightCustomConverter]
     public enum TestEnum
     {
@@ -39,6 +43,11 @@ public class DynaMightTestClass
 
     [DynaMightCustomConverter]
     public class InternalClass
+    {
+        public string InternalString { get; set; } = default!;
+    }
+    
+    public class InternalClassNotSerializable
     {
         public string InternalString { get; set; } = default!;
     }

@@ -1,4 +1,5 @@
 using System.Reflection;
+using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
 using DynaMight.Extensions;
 
@@ -34,6 +35,9 @@ public abstract class AttributeValueDictionaryConverter
 
         foreach (var property in typeof(T).GetProperties())
         {
+            if (property.GetCustomAttributes(typeof(DynamoDBIgnoreAttribute)).Any())
+                continue;
+            
             if (AttributeValueDictionaryConverter<T>.DefaultSetters.TryGetValue(property.PropertyType, out var setter))
             {
                 setter(obj, property, dict);
