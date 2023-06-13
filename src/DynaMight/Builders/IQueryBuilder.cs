@@ -5,6 +5,9 @@ namespace DynaMight.Builders;
 
 public interface IQueryBuilder : IDynamoBuilder
 {
+    /// <summary>
+    /// Default size for Pagination
+    /// </summary>
     public const int DefaultPageSize = 20;
     IQueryBuilder AddCriteria(bool condition, Func<IDynamoCriteria> func);
     IQueryBuilder AddCriteria(IDynamoCriteria criteria);
