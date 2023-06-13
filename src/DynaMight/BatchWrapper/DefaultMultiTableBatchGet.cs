@@ -2,6 +2,9 @@ using Amazon.DynamoDBv2.DataModel;
 
 namespace DynaMight.BatchWrapper;
 
+/// <summary>
+/// Class for retrieving a batch of items from multiple DynamoDB tables, using multiple strongly-typed BatchGet objects wrapper
+/// </summary>
 public class DefaultMultiTableBatchGet : IMultiTableBatchGet
 {
     private readonly MultiTableBatchGet _multiTableBatchGet;

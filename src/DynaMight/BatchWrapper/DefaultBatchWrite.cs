@@ -2,6 +2,9 @@ using Amazon.DynamoDBv2.DataModel;
 
 namespace DynaMight.BatchWrapper;
 
+/// <summary>
+/// Represents a non-generic object for writing/deleting a batch of items in a single DynamoDB table
+/// </summary>
 public class DefaultBatchWrite
 {
     private readonly BatchWrite _batchWrite;
@@ -14,6 +17,9 @@ public class DefaultBatchWrite
     public BatchWrite GetBatchWrite() => _batchWrite;
 }
 
+/// <summary>
+/// Represents a generic object for writing/deleting a batch of items in a single DynamoDB table
+/// </summary>
 public class DefaultBatchWrite<T> : DefaultBatchWrite, IBatchWrite<T>
 {
     private readonly BatchWrite<T> _batchWrite;

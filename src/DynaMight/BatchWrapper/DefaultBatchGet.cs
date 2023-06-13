@@ -2,6 +2,9 @@ using Amazon.DynamoDBv2.DataModel;
 
 namespace DynaMight.BatchWrapper;
 
+/// <summary>
+/// Represents a non-generic object for retrieving a batch of items from a single DynamoDB table wrapper
+/// </summary>
 public class DefaultBatchGet
 {
     private readonly BatchGet _batchGet;
@@ -11,6 +14,9 @@ public class DefaultBatchGet
     public BatchGet GetBatchGet() => _batchGet;
 }
 
+/// <summary>
+/// Represents a generic object for retrieving a batch of items from a single DynamoDB table wrapper
+/// </summary>
 public class DefaultBatchGet<T> : DefaultBatchGet, IBatchGet<T>
 {
     private readonly BatchGet<T> _batchGet;
