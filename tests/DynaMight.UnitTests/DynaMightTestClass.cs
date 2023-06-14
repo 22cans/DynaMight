@@ -3,6 +3,7 @@ using DynaMight.Converters;
 
 namespace DynaMight.UnitTests;
 
+[DynamoDBTable("DynaMightTestClass")]
 public class DynaMightTestClass
 {
     public string StringValue { get; set; } = default!;
