@@ -24,10 +24,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="AtomicOperations\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\..\src\DynaMight\DynaMight.csproj" />
     </ItemGroup>
 
