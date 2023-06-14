@@ -12,7 +12,7 @@ public class PageTests
 
     public class OriginDto : IConvertFrom<Origin, OriginDto>
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = default!;
         public static OriginDto ConvertFrom(Origin original)
         {
             return new OriginDto
