@@ -24,7 +24,4 @@ internal class FieldValueDynamoCriteria<T> : DynamoCriteria
 
     public override string ToString()
         => _keyName;
-
-    public override string ToString(bool useParenthesis)
-        => ToString();
 }

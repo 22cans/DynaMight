@@ -42,15 +42,14 @@ public class AtomicBuilder : DynamoBuilder, IAtomicBuilder
     /// <returns>The AtomicBuilder (for a fluent API usage)</returns>
     public IAtomicBuilder AddOperation(IAtomicOperation atomicOperation)
     {
+        if (!AddNameExpression(atomicOperation.GetNameExpression()))
+            return this;
+
         if (!_atomicOperations.ContainsKey(atomicOperation.UpdateExpressionType))
-        {
             _atomicOperations.Add(atomicOperation.UpdateExpressionType, new List<IAtomicOperation>());
-        }
 
         _atomicOperations[atomicOperation.UpdateExpressionType].Add(atomicOperation);
-        AddNameExpression(atomicOperation.GetNameExpression());
         AddValueExpression(atomicOperation.GetValueExpression());
-
         return this;
     }
 
@@ -66,7 +65,7 @@ public class AtomicBuilder : DynamoBuilder, IAtomicBuilder
         base.SetKey(name, value);
         return this;
     }
-    
+
     /// <summary>
     /// Adds a new Criteria into the builder
     /// </summary>

@@ -5,7 +5,7 @@ namespace DynaMight.Builders;
 
 public interface IDynamoBuilder
 {
-    void AddNameExpression((string key, string value) tuple);
+    bool AddNameExpression((string key, string value) tuple);
     void AddValueExpression((string key, AttributeValue value, DynamoDBEntry? dynamoDbEntry) tuple);
     void AddValueExpression(string key, AttributeValue value, DynamoDBEntry? dynamoDbEntry);
 }

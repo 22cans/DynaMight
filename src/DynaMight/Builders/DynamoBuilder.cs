@@ -18,12 +18,13 @@ public abstract class DynamoBuilder : IDynamoBuilder
     private bool _useParenthesis;
     private IDynamoCriteria? _dynamoCriteria;
 
-    public void AddNameExpression((string key, string value) tuple)
+    public bool AddNameExpression((string key, string value) tuple)
     {
-        if (!Names.ContainsKey(tuple.key))
-        {
-            Names.Add(tuple);
-        }
+        if (tuple.key.Length == 1 || Names.ContainsKey(tuple.key))
+            return false;
+        
+        Names.Add(tuple);
+        return true;
     }
 
     public void AddValueExpression((string key, AttributeValue value, DynamoDBEntry? dynamoDbEntry) tuple)
@@ -31,9 +32,6 @@ public abstract class DynamoBuilder : IDynamoBuilder
 
     public void AddValueExpression(string key, AttributeValue value, DynamoDBEntry? dynamoDbEntry)
     {
-        if (string.IsNullOrEmpty(key) || Values.ContainsKey(key))
-            return;
-
         Values.Add(key, value);
         Entries.Add(key, dynamoDbEntry);
     }

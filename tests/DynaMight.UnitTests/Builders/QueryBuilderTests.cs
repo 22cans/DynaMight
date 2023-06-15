@@ -53,10 +53,10 @@ public class QueryBuilderTests
         var config = builder.Build(true);
         config.FilterExpression.ExpressionStatement.Should().MatchRegex($"\\#{FieldName} = :{FieldName}_.{{32}}");
 
-        config.FilterExpression.ExpressionAttributeNames.Should().NotBeNull();
-        config.FilterExpression.ExpressionAttributeNames.Count.Should().Be(1);
-        config.FilterExpression.ExpressionAttributeNames.Keys.Should().Contain($"#{FieldName}");
-        config.FilterExpression.ExpressionAttributeNames.Values.Should().Contain($"{FieldName}");
+        config.FilterExpression.ExpressionAttributeNames.Should().BeEquivalentTo(new Dictionary<string, string>
+        {
+            { $"#{FieldName}", FieldName }
+        });
 
         config.FilterExpression.ExpressionAttributeValues.Should().NotBeNull();
         config.FilterExpression.ExpressionAttributeValues.Count.Should().Be(1);
@@ -80,6 +80,48 @@ public class QueryBuilderTests
 
         config.FilterExpression.ExpressionAttributeValues.Should().NotBeNull();
         config.FilterExpression.ExpressionAttributeValues.Count.Should().Be(0);
+    }
+
+    [Fact]
+    public void AddUnaryCriteria()
+    {
+        var criteria = new NotExistsDynamoCriteria(FieldName);
+        var builder = QueryBuilder
+            .Create()
+            .AddCriteria(true, () => criteria);
+
+        var config = builder.Build(true);
+        config.FilterExpression.ExpressionStatement.Should().MatchRegex($"attribute_not_exists\\(\\#{FieldName}\\)");
+
+        config.FilterExpression.ExpressionAttributeNames.Should().BeEquivalentTo(new Dictionary<string, string>
+        {
+            { $"#{FieldName}", FieldName }
+        });
+
+        config.FilterExpression.ExpressionAttributeValues.Should().BeNullOrEmpty();
+    }
+
+    [Fact]
+    public void AddUnaryWithValueCriteria()
+    {
+        var criteria = new ContainsDynamoCriteria<string>(FieldName, FieldValue);
+        var builder = QueryBuilder
+            .Create()
+            .AddCriteria(true, () => criteria);
+
+        var config = builder.Build(true);
+        config.FilterExpression.ExpressionStatement.Should()
+            .MatchRegex($"contains\\(\\#{FieldName}, :{FieldName}_.{{32}}\\)");
+
+        config.FilterExpression.ExpressionAttributeNames.Should().BeEquivalentTo(new Dictionary<string, string>
+        {
+            { $"#{FieldName}", FieldName }
+        });
+
+        config.FilterExpression.ExpressionAttributeValues.Should().NotBeNull();
+        config.FilterExpression.ExpressionAttributeValues.Count.Should().Be(1);
+        config.FilterExpression.ExpressionAttributeValues.Keys.First().Should().MatchRegex($":{FieldName}_.{{32}}");
+        config.FilterExpression.ExpressionAttributeValues.Values.First().AsString().Should().Be($"{FieldValue}");
     }
 
     [Fact]
@@ -113,7 +155,6 @@ public class QueryBuilderTests
         };
 
         var conditions = config.Filter.ToConditions();
-        conditions.Should().ContainKeys(FieldName, SecondFieldName);
         conditions.Should().BeEquivalentTo(expectedConditions);
     }
 
