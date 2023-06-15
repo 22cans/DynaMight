@@ -16,7 +16,7 @@ public class CriteriaTests
         var criteria = new AndDynamoCriteria(left, right);
         
         criteria.Should().NotBeNull();
-        criteria.ToString().Should().MatchRegex($"\\#{FieldName} = :{FieldName}_.{{32}} AND \\#{FieldName} = :{FieldName}_.{{32}}");
+        criteria.ToString(true).Should().MatchRegex($"\\(\\#{FieldName} = :{FieldName}_.{{32}} AND \\#{FieldName} = :{FieldName}_.{{32}}\\)");
     }
     
     [Fact]

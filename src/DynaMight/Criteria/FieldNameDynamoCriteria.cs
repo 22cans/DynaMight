@@ -17,12 +17,6 @@ internal class FieldNameDynamoCriteria : DynamoCriteria
         builder.AddNameExpression((key: $"#{_fieldName}", value: _fieldName));
     }
 
-    public static implicit operator FieldNameDynamoCriteria(string fieldName)
-        => new(fieldName);
-
     public override string ToString()
         => $"#{_fieldName}";
-
-    public override string ToString(bool useParenthesis)
-        => ToString();
 }

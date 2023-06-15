@@ -68,13 +68,19 @@ public class DynamoValueConverterTests
     [InlineData(DynaMightTestClass.TestEnum.Value1)]
     public void AttributeValue_WhenReceiveCustomEnum(DynaMightTestClass.TestEnum value)
     {
-        CustomDynamoValueConverter.AddCustomConverter<DynaMightTestClass.TestEnum>(
-            r => new AttributeValue { N = ((int)r).ToString() },
-            r => (int)r);
+        // CustomDynamoValueConverter.AddCustomConverter<DynaMightTestClass.TestEnum>(
+        //     r => new AttributeValue { N = ((int)r).ToString() },
+        //     r => (int)r);
 
+        DynaMightCustomConverter.RegisterEnum<DynaMightTestClass.TestEnum>();
         var result = DynamoValueConverter.From(value);
+        var resultEnum = DynamoValueConverter.ToDynamoDbEntry(value);
 
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(new AttributeValue { N = ((int)value).ToString() });
+
+        resultEnum.Should().NotBeNull();
+        resultEnum!.AsInt().Should().Be((int)value);
+
     }
 }
