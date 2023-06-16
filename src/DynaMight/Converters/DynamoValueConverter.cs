@@ -19,7 +19,6 @@ public static class DynamoValueConverter
                     $"The type '{typeof(T)}' is not supported by '{nameof(From)}'. Current value: {value}"),
             };
 
-
         if (CustomDynamoValueConverter.CustomConverter[value.GetType()] is not CustomDynamoValueConverter<T>
             converter)
             throw new NotSupportedException(
