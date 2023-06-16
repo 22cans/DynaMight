@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Amazon.DynamoDBv2.DataModel;
 
 namespace DynaMight.BatchWrapper;
@@ -5,6 +6,7 @@ namespace DynaMight.BatchWrapper;
 /// <summary>
 /// Represents a non-generic object for retrieving a batch of items from a single DynamoDB table wrapper
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class DefaultBatchGet
 {
     private readonly BatchGet _batchGet;
@@ -17,6 +19,7 @@ public class DefaultBatchGet
 /// <summary>
 /// Represents a generic object for retrieving a batch of items from a single DynamoDB table wrapper
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class DefaultBatchGet<T> : DefaultBatchGet, IBatchGet<T>
 {
     private readonly BatchGet<T> _batchGet;

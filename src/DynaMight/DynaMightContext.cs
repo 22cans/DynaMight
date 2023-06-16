@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
@@ -15,6 +16,7 @@ namespace DynaMight;
 /// DynaMightContext is a "wrapper" around the DynamoDBContext. It implements some wrappers for batches, as some
 /// definitions for common methods, like the `GetAll`, `GetPage`, `GetFilteredPage` and `ExecuteAtomicOperation`.
 /// </summary>
+[ExcludeFromCodeCoverage]
 public class DynaMightContext : DynamoDBContext, IDynaMightContext
 {
     private readonly AmazonDynamoDBClient _client;
