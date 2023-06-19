@@ -1,3 +1,5 @@
+using System.Reflection;
+using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 
@@ -5,50 +7,139 @@ namespace DynaMight.Converters;
 
 public static class DynamoValueConverter
 {
-    public static AttributeValue From<T>(T value)
+    private static readonly Dictionary<Type, CustomConverter> Converters = new()
     {
-        if (value == null || !CustomDynamoValueConverter.CustomConverter.ContainsKey(value.GetType()))
-            return value switch
+        {
+            typeof(int), new CustomConverter
             {
-                int or long or double or decimal => new AttributeValue { N = value.ToString() },
-                bool b => new AttributeValue { BOOL = b },
-                string s => new AttributeValue { S = s },
-                List<string> ss => new AttributeValue { SS = ss },
-                null => new AttributeValue { NULL = true },
-                _ => throw new NotSupportedException(
-                    $"The type '{typeof(T)}' is not supported by '{nameof(From)}'. Current value: {value}"),
-            };
+                ToObject = v => int.Parse(v.N),
+                ToDynamoDbEntry = v => (int)v
+            }
+        },
+        {
+            typeof(long), new CustomConverter
+            {
+                ToObject = v => long.Parse(v.N),
+                ToDynamoDbEntry = v => (long)v
+            }
+        },
+        {
+            typeof(decimal), new CustomConverter
+            {
+                ToObject = v => decimal.Parse(v.N),
+                ToDynamoDbEntry = v => (decimal)v
+            }
+        },
+        {
+            typeof(double), new CustomConverter
+            {
+                ToObject = v => double.Parse(v.N),
+                ToDynamoDbEntry = v => (double)v
+            }
+        },
+        {
+            typeof(string), new CustomConverter
+            {
+                ToAttributeValue = v => new AttributeValue { S = v.ToString() },
+                ToObject = v => v.S,
+                ToDynamoDbEntry = v => (string)v
+            }
+        },
+        {
+            typeof(bool), new CustomConverter
+            {
+                ToAttributeValue = v => new AttributeValue { BOOL = (bool)v },
+                ToObject = v => v.BOOL,
+                ToDynamoDbEntry = v => (bool)v
+            }
+        },
+        {
+            typeof(List<string>), new CustomConverter
+            {
+                ToAttributeValue = v => new AttributeValue { SS = (List<string>)v },
+                ToObject = v => v.SS,
+                ToDynamoDbEntry = v => (List<string>)v
+            }
+        },
+    };
 
-        if (CustomDynamoValueConverter.CustomConverter[value.GetType()] is not CustomDynamoValueConverter<T>
-            converter)
+    public static void Add(Type type, CustomConverter converter) => Converters[type] = converter;
+
+    public static AttributeValue ToAttributeValue(object? value)
+    {
+        if (value is null)
+            return new AttributeValue { NULL = true };
+
+        if (!Converters.ContainsKey(value.GetType()))
             throw new NotSupportedException(
-                $"The type '{typeof(T)}' is not supported by '{nameof(From)}'. Current value: {value}");
+                $"The type '{value.GetType()}' is not supported by '{nameof(ToAttributeValue)}'. Current value: {value}");
 
-        return converter.AttributeValue(value);
+        var converter = Converters[value.GetType()];
+        return converter.ToAttributeValue(value);
     }
 
-    public static DynamoDBEntry? ToDynamoDbEntry<T>(T value)
+    public static Dictionary<string, AttributeValue> ToClassAttributeValue<T>(T value)
     {
-        if (value == null || !CustomDynamoValueConverter.CustomConverter.ContainsKey(value.GetType()))
-            return value switch
-            {
-                int v => v,
-                long v => v,
-                double v => v,
-                decimal v => v,
-                bool v => v,
-                string v => v,
-                null => null,
-                List<string> v => v,
-                _ => throw new NotSupportedException(
-                    $"The type '{typeof(T)}' is not supported by '{nameof(ToDynamoDbEntry)}'. Current value: {value}"),
-            };
+        var dictionary = new Dictionary<string, AttributeValue>();
 
-        if (CustomDynamoValueConverter.CustomConverter[value.GetType()] is not CustomDynamoValueConverter<T>
-            converter)
+        foreach (var property in typeof(T).GetProperties())
+        {
+            if (property.GetCustomAttributes(typeof(DynamoDBIgnoreAttribute)).Any())
+                continue;
+
+            var propValue = property.GetValue(value);
+            var dynamoValue = ToAttributeValue(propValue);
+            dictionary.Add(property.Name, dynamoValue);
+        }
+
+        return dictionary;
+    }
+
+    public static DynamoDBEntry? ToDynamoDbEntry(object? value)
+    {
+        if (value is null)
+            return null;
+
+        if (!Converters.ContainsKey(value.GetType()))
             throw new NotSupportedException(
-                $"The type '{typeof(T)}' is not supported by '{nameof(ToDynamoDbEntry)}'. Current value: {value}");
+                $"The type '{value.GetType()}' is not supported by '{nameof(ToDynamoDbEntry)}'. Current value: {value}");
 
-        return converter.DynamoDbEntry(value);
+        var converter = Converters[value.GetType()];
+        return converter.ToDynamoDbEntry!.Invoke(value);
+    }
+
+    public static T  To<T>(IReadOnlyDictionary<string, AttributeValue> dict) where T : new()
+    {
+        var obj = new T();
+
+        foreach (var property in typeof(T).GetProperties())
+        {
+            if (property.GetCustomAttributes(typeof(DynamoDBIgnoreAttribute)).Any())
+                continue;
+
+            if (!dict.ContainsKey(property.Name))
+            {
+                //https://devblogs.microsoft.com/dotnet/announcing-net-6-preview-7/#libraries-reflection-apis-for-nullability-information
+                var context = new NullabilityInfoContext();
+                var propInfo = context.Create(property);
+                if (propInfo.WriteState is not NullabilityState.Nullable)
+                    throw new KeyNotFoundException(property.Name);
+
+                continue;
+            }
+
+            var propertyType = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+            if (!Converters.ContainsKey(propertyType))
+                throw new NotSupportedException(
+                    $"Type '{property.PropertyType}' is not yet supported by atomic deserialization.");
+
+            var converter = Converters[propertyType];
+            var attributeValue = dict[property.Name];
+
+            property.SetValue(obj, converter.ToObject(attributeValue));
+        }
+
+        return obj;
     }
 }

@@ -1,5 +1,4 @@
 using System.Reflection;
-using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
 using DynaMight.Converters;
 
@@ -34,10 +33,12 @@ public static class DynaMightCustomConverter
 
     public static void RegisterEnum<T>()
     {
-        Register<T>((obj, prop, dict) =>
-                prop.SetValue(obj, (T)(object)int.Parse(dict[prop.Name].N)),
-            r => new AttributeValue { N = Convert.ToInt32(r).ToString() },
-            r => Convert.ToInt32(r));
+        DynamoValueConverter.Add(typeof(T), new CustomConverter
+        {
+            ToAttributeValue = v => new AttributeValue { N = Convert.ToInt32(v).ToString() },
+            ToObject = v => (T)(object)int.Parse(v.N),
+            ToDynamoDbEntry = v => Convert.ToInt32(v)
+        });
     }
 
     private static void RegisterClass(Type type)
@@ -50,17 +51,10 @@ public static class DynaMightCustomConverter
 
     public static void RegisterClass<T>() where T : new()
     {
-        AttributeValueDictionaryConverter.AddCustomConverter<T>((obj, prop, dict) =>
-            prop.SetValue(obj, AttributeValueDictionaryConverter.ConvertFrom<T>(dict[prop.Name].M)));
-    }
-
-    // ReSharper disable once MemberCanBePrivate.Global
-    public static void Register<T>(
-        Action<object, PropertyInfo, IReadOnlyDictionary<string, AttributeValue>> action,
-        Func<T, AttributeValue> attributeValue,
-        Func<T, DynamoDBEntry> dynamoDbEntry)
-    {
-        AttributeValueDictionaryConverter.AddCustomConverter<T>(action);
-        CustomDynamoValueConverter.AddCustomConverter(attributeValue, dynamoDbEntry);
+        DynamoValueConverter.Add(typeof(T), new CustomConverter
+        {
+            ToAttributeValue = v => new AttributeValue { M = DynamoValueConverter.ToClassAttributeValue((T)v) },
+            ToObject = v => DynamoValueConverter.To<T>(v.M)
+        });
     }
 }

@@ -71,7 +71,7 @@ public class DynaMightContext : DynamoDBContext, IDynaMightContext
     {
         var request = requestBuilder.SetTableName<T>(_config).Build();
         var response = await _client.UpdateItemAsync(request, cancellationToken);
-        return AttributeValueDictionaryConverter.ConvertFrom<T>(response.Attributes);
+        return DynamoValueConverter.To<T>(response.Attributes);
     }
 
     /// <summary>

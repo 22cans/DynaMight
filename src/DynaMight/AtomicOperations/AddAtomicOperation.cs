@@ -22,7 +22,7 @@ public class AddAtomicOperation<T> : AtomicOperation<T>
     public AddAtomicOperation(string fieldName, T value)
     {
         FieldName = fieldName;
-        AttributeValue = DynamoValueConverter.From(value);
+        AttributeValue = DynamoValueConverter.ToAttributeValue(value);
         Value = value;
     }
 
