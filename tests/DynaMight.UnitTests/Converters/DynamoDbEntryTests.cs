@@ -81,5 +81,15 @@ public class DynamoDbEntryTests
 
         Assert.Throws<NotSupportedException>(() => DynamoValueConverter.ToDynamoDbEntry(value));
     }
+    
+    [Fact]
+    public void ToDynamoDbEntry_UnsupportedNull()
+    {
+        DynaMightCustomConverter.RegisterClass<DynaMightTestClass>();
+
+        var result = DynamoValueConverter.ToDynamoDbEntry(new DynaMightTestClass());
+
+        result.Should().BeNull();
+    }
 
 }
