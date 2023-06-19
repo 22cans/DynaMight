@@ -22,7 +22,7 @@ jobs:
         id: get_issues
         if: success() || failure()
         run: |
-          TICKETS="\""$(echo '${{ github.event.release.body }}' | grep -io 'LGCBE-[0-9]\+' | sort | uniq | sed ':a; N; $!ba; s/\n/","/g')"\""
+          TICKETS="\""$(echo '${{ github.event.release.body }}' | grep -io 'LBE-[0-9]\+' | sort | uniq | sed ':a; N; $!ba; s/\n/","/g')"\""
           echo DATE=$(date -u +"%Y-%m-%dT%H:%M:%S.000Z") >> "$GITHUB_OUTPUT"
           echo "ISSUES=$TICKETS" >> "$GITHUB_OUTPUT"
 
