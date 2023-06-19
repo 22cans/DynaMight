@@ -16,16 +16,19 @@ public class DynaMightTestClass
     public int? IntNullableValue { get; set; }
     public decimal DecimalValue { get; set; }
     public decimal? DecimalNullableValue { get; set; }
+    public double DoubleValue { get; set; }
+    public double? DoubleNullableValue { get; set; }
     public long LongValue { get; set; }
     public long? LongNullableValue { get; set; }
     public bool BoolValue { get; set; }
     public bool? BoolNullableValue { get; set; }
+    public List<string> StringListValue { get; set; } = default!;
+    public List<string>? StringListNullableValue { get; set; }
     public InternalClass InternalClassValue { get; set; } = default!;
     public InternalClass? InternalClassNullableValue { get; set; }
-    
-    [DynamoDBIgnore]
-    public InternalClassNotSerializable? IgnoreClass { get; set; } 
-    
+
+    [DynamoDBIgnore] public InternalClassNotSerializable? IgnoreClass { get; set; }
+
     [DynaMightCustomConverter]
     public enum TestEnum
     {
@@ -47,9 +50,15 @@ public class DynaMightTestClass
     {
         public string InternalString { get; set; } = default!;
     }
-    
+
     public class InternalClassNotSerializable
     {
         public string InternalString { get; set; } = default!;
     }
+}
+
+[DynaMightCustomConverter]
+public class UnsupportedTypeClass
+{
+    public char CharValue { get; set; }
 }

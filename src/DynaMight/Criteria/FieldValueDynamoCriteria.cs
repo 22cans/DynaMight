@@ -18,7 +18,7 @@ internal class FieldValueDynamoCriteria<T> : DynamoCriteria
     {
         base.UseAtomicOperationBuilder(builder);
 
-        builder.AddValueExpression(_keyName, DynamoValueConverter.From(_value),
+        builder.AddValueExpression(_keyName, DynamoValueConverter.ToAttributeValue(_value),
             DynamoValueConverter.ToDynamoDbEntry(_value));
     }
 

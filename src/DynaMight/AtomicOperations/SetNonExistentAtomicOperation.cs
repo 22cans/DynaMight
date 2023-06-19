@@ -14,7 +14,7 @@ public class SetNonExistentAtomicOperation<T> : AtomicOperation<T>
     public SetNonExistentAtomicOperation(string fieldName, T value)
     {
         FieldName = fieldName;
-        AttributeValue = DynamoValueConverter.From(value);
+        AttributeValue = DynamoValueConverter.ToAttributeValue(value);
         Value = value;
     }
 
