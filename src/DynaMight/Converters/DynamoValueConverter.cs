@@ -105,7 +105,7 @@ public static class DynamoValueConverter
                 $"The type '{value.GetType()}' is not supported by '{nameof(ToDynamoDbEntry)}'. Current value: {value}");
 
         var converter = Converters[value.GetType()];
-        return converter.ToDynamoDbEntry!.Invoke(value);
+        return converter.ToDynamoDbEntry?.Invoke(value);
     }
 
     public static T  To<T>(IReadOnlyDictionary<string, AttributeValue> dict) where T : new()
