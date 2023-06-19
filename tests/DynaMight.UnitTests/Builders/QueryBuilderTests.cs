@@ -238,4 +238,23 @@ public class QueryBuilderTests
         config.Should().NotBeNull();
         config.IndexName.Should().Be(index);
     }
+    
+    
+    [Fact]
+    public void BuildWithoutFilter()
+    {
+        var left = new EqualDynamoCriteria<string>(FieldName, FieldValue);
+        var right = new EqualDynamoCriteria<long>(SecondFieldName, SecondFieldValue);
+        var criteria = new AndDynamoCriteria(left, right);
+
+        var builder = QueryBuilder
+            .Create()
+            .AddCriteria(criteria)
+            .UseParenthesis();
+
+
+        var config = builder.Build(false);
+        config.Should().NotBeNull();
+        config.FilterExpression.Should().BeNull();
+    }
 }
