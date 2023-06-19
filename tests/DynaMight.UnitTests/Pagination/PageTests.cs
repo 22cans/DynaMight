@@ -41,6 +41,20 @@ public class PageTests
         pageDto.Results!.Count.Should().Be(1);
         pageDto.Results[0].Should().BeEquivalentTo(new OriginDto{ Id = id});
     }
+    
+    [Fact]
+    public void ConvertToWithNullList()
+    {
+        const string id = "5e4c0992-7d56-4926-b712-3ca7a1230cda";
+        const string token = "nextPage";
+
+        var pageOrigin = new Page<Origin>(token, null);
+        var pageDto = pageOrigin.ConvertTo<OriginDto>();
+
+        pageDto.Should().NotBeNull();
+        pageDto.PageToken.Should().Be(token);
+        pageDto.Results.Should().BeNullOrEmpty();
+    }
 
     [Fact]
     public void Empty()
