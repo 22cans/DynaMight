@@ -4,7 +4,10 @@ using DynaMight.Converters;
 
 namespace DynaMight.AtomicOperations;
 
-/// <inheritdoc />
+/// <summary>
+/// Basic implementation for the AtomicOperation of Type T
+/// </summary>
+/// <typeparam name="T">The value's type</typeparam>
 public abstract class AtomicOperation<T> : IAtomicOperation
 {
     /// <inheritdoc />
