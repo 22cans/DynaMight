@@ -11,6 +11,12 @@ public class DefaultMultiTableBatchWrite : IMultiTableBatchWrite
 {
     private readonly MultiTableBatchWrite _multiTableBatchWrite;
 
+    /// <summary>
+    /// Constructs a MultiTableBatchWrite object from a number of
+    /// BatchWrite objects
+    /// </summary>
+    /// <param name="multiTableBatchWrite">DynamoDB original MultiTableBatchWrite</param>
+    /// <param name="batches">Collection of BatchWrite objects</param>
     public DefaultMultiTableBatchWrite(MultiTableBatchWrite multiTableBatchWrite, params IBatchWrite[] batches)
     {
         _multiTableBatchWrite = multiTableBatchWrite;
@@ -18,9 +24,11 @@ public class DefaultMultiTableBatchWrite : IMultiTableBatchWrite
             _multiTableBatchWrite.AddBatch((batch as DefaultBatchWrite)?.GetBatchWrite());
     }
 
+    /// <inheritdoc />
     public void AddBatch(IBatchWrite batch)
         => _multiTableBatchWrite.AddBatch((batch as DefaultBatchWrite)?.GetBatchWrite());
 
+    /// <inheritdoc />
     public Task ExecuteAsync(CancellationToken cancellationToken) =>
         _multiTableBatchWrite.ExecuteAsync(cancellationToken);
 }

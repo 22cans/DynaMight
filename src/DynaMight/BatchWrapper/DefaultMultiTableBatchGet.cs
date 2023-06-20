@@ -11,6 +11,12 @@ public class DefaultMultiTableBatchGet : IMultiTableBatchGet
 {
     private readonly MultiTableBatchGet _multiTableBatchGet;
 
+    /// <summary>
+    /// Constructs a MultiTableBatchGet object from a number of
+    /// BatchGet objects
+    /// </summary>
+    /// <param name="multiTableBatchGet">DynamoDB original MultiTableBatchGet</param>
+    /// <param name="batches">Collection of BatchGet objects</param>
     public DefaultMultiTableBatchGet(MultiTableBatchGet multiTableBatchGet, params IBatchGet[] batches)
     {
         _multiTableBatchGet = multiTableBatchGet;
@@ -18,9 +24,11 @@ public class DefaultMultiTableBatchGet : IMultiTableBatchGet
             _multiTableBatchGet.AddBatch((batch as DefaultBatchGet)?.GetBatchGet());
     }
 
+    /// <inheritdoc />
     public void AddBatch(IBatchGet batch)
         => _multiTableBatchGet.AddBatch((batch as DefaultBatchGet)?.GetBatchGet());
 
+    /// <inheritdoc />
     public Task ExecuteAsync(CancellationToken cancellationToken) =>
         _multiTableBatchGet.ExecuteAsync(cancellationToken);
 }
