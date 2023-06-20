@@ -2,9 +2,16 @@ using DynaMight.Converters;
 
 namespace DynaMight.AtomicOperations;
 
+/// <summary>
+/// Creates an atomic operation that will use the ADD operation in the DynamoDB.
+/// </summary>
+/// <typeparam name="T">The field type</typeparam>
 public class AddAtomicOperation<T> : AtomicOperation<T>
 {
+    /// <inheritdoc />
     public override string UpdateExpressionType => "ADD";
+
+    /// <inheritdoc />
     protected override string Pattern => "#{0} :{0}";
 
     /// <summary>
@@ -26,5 +33,6 @@ public class AddAtomicOperation<T> : AtomicOperation<T>
         Value = value;
     }
 
+    /// <inheritdoc />
     public override string GetUpdateExpression() => string.Format(Pattern, FieldName);
 }

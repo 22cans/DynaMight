@@ -4,8 +4,12 @@ using DynaMight.Converters;
 
 namespace DynaMight.AtomicOperations;
 
+/// <summary>
+/// Creates an atomic operation that will use the SET operation in the DynamoDB with an addition operation (`field = field + value`).
+/// </summary>
 public class IncrementByAtomicOperation<T> : AtomicOperation<T>
 {
+    /// <inheritdoc />
     protected override string Pattern => "#{0} = #{0} + :{0}Increment";
 
     /// <summary>
@@ -23,6 +27,7 @@ public class IncrementByAtomicOperation<T> : AtomicOperation<T>
         Value = increment;
     }
 
+    /// <inheritdoc />
     public override (string, AttributeValue, DynamoDBEntry?) GetValueExpression()
         => ($":{FieldName}Increment", AttributeValue, DynamoValueConverter.ToDynamoDbEntry(Value));
 }
