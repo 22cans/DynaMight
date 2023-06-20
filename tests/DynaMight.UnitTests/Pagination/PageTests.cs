@@ -7,11 +7,12 @@ public class PageTests
 {
     public class Origin
     {
-        public Guid Guid { get; set; }
+        public Guid Guid { get; init; }
     }
 
     public class OriginDto : IConvertFrom<Origin, OriginDto>
     {
+        // ReSharper disable once UnusedAutoPropertyAccessor.Global
         public string Id { get; set; } = default!;
         public static OriginDto ConvertFrom(Origin original)
         {
@@ -45,7 +46,6 @@ public class PageTests
     [Fact]
     public void ConvertToWithNullList()
     {
-        const string id = "5e4c0992-7d56-4926-b712-3ca7a1230cda";
         const string token = "nextPage";
 
         var pageOrigin = new Page<Origin>(token, null);
