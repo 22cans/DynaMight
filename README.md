@@ -1,15 +1,16 @@
 # DynaMight
 
-The DynaMight is a library wrapper for the DynamoDB SDK from Amazon, which implements some features that are quite complicated to use directly. It provides a convenient way to execute atomic operations, pagination and filter results.
+DynaMight is a powerful library wrapper for Amazon's DynamoDB SDK, designed to simplify the usage of complex features. It provides a convenient way to execute atomic operations, implement pagination, and filter results.
 ​
 ## Features
 ​
-- **Easier operations using builder and fluent API pattern:** the DynaMight tries to facilitate operations using a fluent API pattern and make the operations easier using the builder pattern. See below some examples.
-- **Easier pagination and filter queries:** Pagination and filters in DynamoDB SDK is not an easy task. DynaMight wrapper the complexity.
+- **Easier operations using builder:** the DynaMight uses the builder pattern to make it easier to create the configurations for queries and atomic operations.
+- **More readable code:** the DynaMight uses a fluent API pattern, which makes the code more readable.
+- Effortless pagination and filtering: Performing pagination and filtering in the DynamoDB SDK can be challenging. DynaMight abstracts away this complexity.
 
 ## Examples
 
-Consider for the following events the classes below:
+Consider the following classes below:
 
 ```cs
 [DynamoDBTable("User")]
@@ -38,7 +39,7 @@ public enum SessionStatus
 }
 ```
 
-We need to tell the DynaMight how to handle this enum. To do that, we can use the `DynaMightCustomConverter` attribute, which will register the enum default converter (enum to int transformation) when the `DynaMightCustomConverter.LoadAndRegister()` function is called.
+To instruct DynaMight on how to handle the `SessionStatus` enum, you can use the `DynaMightCustomConverter` attribute, which registers the default converter (enum to int transformation) when the `DynaMightCustomConverter.LoadAndRegister()` function is called.
 
 ```cs
 [DynaMightCustomConverter]
@@ -49,7 +50,7 @@ public enum SessionStatus
 }
 ```
 
-### How to register the DynaMight
+### Registering DynaMight
 
 ```cs
 var client = new AmazonDynamoDBClient();
@@ -57,15 +58,15 @@ var config = new DynamoDBContextConfig();
 var dbContext = new DynaMightDbContext(client, config);
 services.AddSingleton<IDynamoDBContext>(dbContext);
 ```
-If you need to provide the credentials to create the `AmazonDynamoDBClient`, please do that as normal.
+If you need to provide credentials to create the `AmazonDynamoDBClient`, please do so as usual.
 
-We recommend that you call the `LoadAndRegister` function during the registration, which will load all the classes and enums that have the `DynaMightCustomConverter` and register them.
+We recommend calling the `LoadAndRegister` function during registration, which loads all classes and enums marked with the `DynaMightCustomConverter` attribute and registers them.
 
 ```cs
 DynaMightCustomConverter.LoadAndRegister();
 ```
 
-### How to get all sessions from an user
+### Retrieving all sessions for a user
 
 ```cs
 public async Task<List<Session>> GetAllSessions(CancellationToken cancellationToken)
@@ -78,7 +79,7 @@ public async Task<List<Session>> GetAllSessions(CancellationToken cancellationTo
 }
 ```
 
-### How to get all sessions from an user using pagination
+### Retrieving paginated sessions for a user
 
 ```cs
 public async Task<Page<Session>> GetSessionPaginated(int? pageSize, string? pageToken, CancellationToken cancellationToken)
@@ -92,9 +93,9 @@ public async Task<Page<Session>> GetSessionPaginated(int? pageSize, string? page
 }
 ```
 
-The `Page<T>` class has two properties: `string PageToken` and `IList<T>? Results`. The `PageToken` should be passed back to the function when you want to get the next page.
+The `Page<T>` class has two properties: `string PageToken` and `IList<T>? Results`. The `PageToken` should be passed back to retrieve the next page.
 
-### How to get all sessions from an user using pagination and filtering to get only the Inactive
+### Retrieving paginated sessions for a user with filtering for inactive sessions
 
 ```cs
 public async Task<List<Session>> GetInactiveSessionsPaginated(int? pageSize, string? pageToken, CancellationToken cancellationToken)
@@ -108,7 +109,7 @@ public async Task<List<Session>> GetInactiveSessionsPaginated(int? pageSize, str
     return await _dynaMightContext.GetFilteredPage<Session>(config, cancellationToken);
 }
 ```
-### How to get all sessions from an user using pagination and filtering to get only the Inactive AND the ones that have 100 clicks or more
+### Retrieving paginated sessions for a user with filtering for inactive sessions and sessions with 100 clicks or more
 
 ```cs
 public async Task<Page<Session>> GetInactiveSessionsOver100ClicksPaginated(int? pageSize, string? pageToken, CancellationToken cancellationToken)
@@ -125,7 +126,7 @@ public async Task<Page<Session>> GetInactiveSessionsOver100ClicksPaginated(int? 
 }
 ```
 
-### How to add a new click in an atomic operation
+### Adding a new click in an atomic operation
 
 ```cs
 public async Task<Session> AddClick(CancellationToken cancellationToken)
@@ -139,7 +140,7 @@ public async Task<Session> AddClick(CancellationToken cancellationToken)
 }
 ```
 
-### How to create a read batch
+### Creating a read batch
 
 ```cs
 public async Task<List<Session>> BatchRead(CancellationToken cancellationToken)
