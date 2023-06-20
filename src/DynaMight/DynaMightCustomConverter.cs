@@ -4,8 +4,19 @@ using DynaMight.Converters;
 
 namespace DynaMight;
 
+/// <summary>
+/// Registers the <see cref="CustomConverter"/> defined by the application
+/// </summary>
 public static class DynaMightCustomConverter
 {
+    /// <summary>
+    /// Loads all the assemblies and check the classes/enums that have a <see cref="DynaMightCustomConverterAttribute"/>
+    /// and register their types in the CustomConverters
+    /// </summary>
+    /// <remarks>
+    /// Enums will be registered as int conversions. If you want a custom implementation, don't use the Attribute for it.
+    /// Instead, use the method <see cref="RegisterEnum{T}(CustomConverter)"/>, passing you custom implementation.
+    /// </remarks>
     public static void LoadAndRegister()
     {
         foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -31,14 +42,26 @@ public static class DynaMightCustomConverter
         method.Invoke(null, null);
     }
 
+    /// <summary>
+    /// Register a <see cref="CustomConverter"/> for the Enum with the default Int conversion
+    /// </summary>
+    /// <typeparam name="T">Enum's type</typeparam>
     public static void RegisterEnum<T>()
-    {
-        DynamoValueConverter.Add(typeof(T), new CustomConverter
+        => RegisterEnum<T>(new CustomConverter
         {
             ToAttributeValue = v => new AttributeValue { N = Convert.ToInt32(v).ToString() },
             ToObject = v => (T)(object)int.Parse(v.N),
             ToDynamoDbEntry = v => Convert.ToInt32(v)
         });
+
+    /// <summary>
+    /// Register a <see cref="CustomConverter"/> for the Enum
+    /// </summary>
+    /// <param name="converter">The <see cref="CustomConverter"/> for the enum.</param>
+    /// <typeparam name="T">Enum's type</typeparam>
+    public static void RegisterEnum<T>(CustomConverter converter)
+    {
+        DynamoValueConverter.Add(typeof(T), converter);
     }
 
     private static void RegisterClass(Type type)
@@ -49,6 +72,10 @@ public static class DynaMightCustomConverter
         method.Invoke(null, null);
     }
 
+    /// <summary>
+    /// Registers a <see cref="CustomConverter"/> for the Class
+    /// </summary>
+    /// <typeparam name="T">Class' type</typeparam>
     public static void RegisterClass<T>() where T : new()
     {
         DynamoValueConverter.Add(typeof(T), new CustomConverter
