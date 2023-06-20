@@ -9,6 +9,10 @@ namespace DynaMight.Pagination;
 /// <typeparam name="TY"></typeparam>
 public interface IConvertFrom<in TX, out TY>
 {
+    /// <summary>
+    /// Converts the page of type <typeparamref name="TX"/> to a page of type <typeparamref name="TY"/>  
+    /// </summary>
+    /// <returns>A new page of type <typeparamref name="TY"/></returns>
     static abstract TY ConvertFrom(TX original);
 }
 #pragma warning restore CA2252
