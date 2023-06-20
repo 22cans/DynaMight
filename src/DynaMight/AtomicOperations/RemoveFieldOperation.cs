@@ -3,16 +3,23 @@ using Amazon.DynamoDBv2.Model;
 
 namespace DynaMight.AtomicOperations;
 
-public class RemoveFieldOperation : IAtomicOperation
+/// <summary>
+/// Removes a property from the register in the DynamoDB.
+/// </summary>
+public sealed class RemoveFieldOperation : IAtomicOperation
 {
-    public virtual string UpdateExpressionType => "REMOVE";
+    /// <inheritdoc />
+    public string UpdateExpressionType => "REMOVE";
     private string FieldName { get; }
 
-    public virtual string GetUpdateExpression() => $"#{FieldName}";
+    /// <inheritdoc />
+    public string GetUpdateExpression() => $"#{FieldName}";
 
-    public virtual (string key, string value) GetNameExpression() => ($"#{FieldName}", FieldName);
+    /// <inheritdoc />
+    public (string key, string value) GetNameExpression() => ($"#{FieldName}", FieldName);
 
-    public virtual (string, AttributeValue AttributeValue, DynamoDBEntry?) GetValueExpression() => (string.Empty, null!, null);
+    /// <inheritdoc />
+    public (string, AttributeValue AttributeValue, DynamoDBEntry?) GetValueExpression() => (string.Empty, null!, null);
 
     /// <summary>
     /// Removes a property from the register in the DynamoDB.

@@ -2,8 +2,12 @@ using DynaMight.Converters;
 
 namespace DynaMight.AtomicOperations;
 
+/// <summary>
+/// Creates an atomic operation that will use the SET operation in the DynamoDB.
+/// </summary>
 public class SetAtomicOperation<T> : AtomicOperation<T>
 {
+    /// <inheritdoc />
     protected override string Pattern => "#{0} = :{0}";
 
     /// <summary>
@@ -21,6 +25,4 @@ public class SetAtomicOperation<T> : AtomicOperation<T>
         AttributeValue = DynamoValueConverter.ToAttributeValue(value);
         Value = value;
     }
-
-    public override string GetUpdateExpression() => string.Format(Pattern, FieldName);
 }

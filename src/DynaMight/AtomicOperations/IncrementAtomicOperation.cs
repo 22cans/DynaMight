@@ -1,5 +1,8 @@
 namespace DynaMight.AtomicOperations;
 
+/// <summary>
+/// Creates an atomic operation that will use the SET operation in the DynamoDB with an addition operation by value 1 (`field = field + 1`).
+/// </summary>
 public class IncrementAtomicOperation : IncrementByAtomicOperation<int>
 {
     
