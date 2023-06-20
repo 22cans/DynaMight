@@ -15,7 +15,7 @@ public class User
     public string Name { get; set; } = default!;
 }
 
-[DynamoDBTable("User")]
+[DynamoDBTable("Session")]
 public class Session
 {
     [DynamoDBHashKey]

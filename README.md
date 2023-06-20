@@ -4,24 +4,16 @@ DynaMight is a powerful library wrapper for Amazon's DynamoDB SDK, designed to s
 ​
 ## Features
 ​
-- **Easier operations using builder:** the DynaMight uses the builder pattern to make it easier to create the configurations for queries and atomic operations.
-- **More readable code:** the DynaMight uses a fluent API pattern, which makes the code more readable.
-- Effortless pagination and filtering: Performing pagination and filtering in the DynamoDB SDK can be challenging. DynaMight abstracts away this complexity.
+- **Easier operations using builder:** DynaMight uses the builder pattern to make it easier to create the configurations for queries and atomic operations.
+- **More readable code:** DynaMight uses a fluent API pattern, which makes the code more readable.
+- **Effortless pagination and filtering:** Performing pagination and filtering in the DynamoDB SDK can be challenging. DynaMight abstracts away this complexity.
 
 ## Examples
 
 Consider the following classes below:
 
 ```cs
-[DynamoDBTable("User")]
-public class User
-{
-    [DynamoDBHashKey]
-    public string Id { get; set; } = default!;
-    public string Name { get; set; } = default!;
-}
-
-[DynamoDBTable("User")]
+[DynamoDBTable("Session")]
 public class Session
 {
     [DynamoDBHashKey]
@@ -39,7 +31,7 @@ public enum SessionStatus
 }
 ```
 
-To instruct DynaMight on how to handle the `SessionStatus` enum, you can use the `DynaMightCustomConverter` attribute, which registers the default converter (enum to int transformation) when the `DynaMightCustomConverter.LoadAndRegister()` function is called.
+To instruct DynaMight on how to handle the `SessionStatus` enum, you can use the `DynaMightCustomConverter` attribute, which registers the default converter (`enum` to `int` transformation) when the `DynaMightCustomConverter.LoadAndRegister()` function is called.
 
 ```cs
 [DynaMightCustomConverter]
@@ -134,6 +126,7 @@ public async Task<Session> AddClick(CancellationToken cancellationToken)
     var config = AtomicBuilder
         .Create()
         .SetKey(nameof(Session.UserId), "userId1")
+        .SetKey(nameof(Session.SessionId), "sessionId1")
         .AddOperation(new IncrementByAtomicOperation<int>(nameof(Session.Clicks), 1));
 
     return await _dynaMightContext.ExecuteAtomicOperation<Session>(config, cancellationToken);
