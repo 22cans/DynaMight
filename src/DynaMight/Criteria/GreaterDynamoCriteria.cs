@@ -1,5 +1,8 @@
 namespace DynaMight.Criteria;
 
+/// <summary>
+/// Creates a `greater than (>)` criteria for the filter.
+/// </summary>
 public class GreaterDynamoCriteria<T> : BinaryDynamoCriteria
 {
     /// <summary>
@@ -10,5 +13,8 @@ public class GreaterDynamoCriteria<T> : BinaryDynamoCriteria
     public GreaterDynamoCriteria(string fieldName, T value)
         : base(new FieldNameDynamoCriteria(fieldName), new FieldValueDynamoCriteria<T>(fieldName, value)) { }
 
+    /// <summary>
+    /// 
+    /// </summary>
     protected override string Operator => ">";
 }

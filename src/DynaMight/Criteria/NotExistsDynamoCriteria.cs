@@ -1,7 +1,11 @@
 namespace DynaMight.Criteria;
 
+/// <summary>
+/// Creates a `not exists` criteria for the filter.
+/// </summary>
 public class NotExistsDynamoCriteria : UnaryFunctionDynamoCriteria
 {
+    /// <inheritdoc />
     protected override string FunctionName => "attribute_not_exists";
 
     /// <summary>

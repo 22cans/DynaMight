@@ -1,5 +1,8 @@
 namespace DynaMight.Criteria;
 
+/// <summary>
+/// Creates a `less than (&lt;)` criteria for the filter.
+/// </summary>
 public class LessDynamoCriteria<T> : BinaryDynamoCriteria
 {
     /// <summary>
@@ -10,5 +13,6 @@ public class LessDynamoCriteria<T> : BinaryDynamoCriteria
     public LessDynamoCriteria(string fieldName, T value)
         : base(new FieldNameDynamoCriteria(fieldName), new FieldValueDynamoCriteria<T>(fieldName, value)) { }
 
+    /// <inheritdoc />
     protected override string Operator => "<";
 }

@@ -1,7 +1,11 @@
 namespace DynaMight.Criteria;
 
+/// <summary>
+/// Creates a AND condition for the filter's criteria.
+/// </summary>
 public class AndDynamoCriteria : BinaryDynamoCriteria
 {
+    /// <inheritdoc />
     protected override string Operator => "AND";
 
     /// <summary>

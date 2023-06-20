@@ -1,7 +1,11 @@
 namespace DynaMight.Criteria;
 
+/// <summary>
+/// Creates a `contains` criteria for the filter.
+/// </summary>
 public class ContainsDynamoCriteria<T> : UnaryFunctionWithValueDynamoCriteria<T>
 {
+    /// <inheritdoc />
     protected override string FunctionName => "contains";
 
     /// <summary>

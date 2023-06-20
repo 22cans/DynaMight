@@ -1,7 +1,11 @@
 namespace DynaMight.Criteria;
 
+/// <summary>
+/// Creates an OR condition for the filter's criteria.
+/// </summary>
 public class OrDynamoCriteria : BinaryDynamoCriteria
 {
+    /// <inheritdoc />
     protected override string Operator => "OR";
 
     /// <summary>
