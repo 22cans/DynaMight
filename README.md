@@ -1,5 +1,9 @@
 # DynaMight
 
+[![NuGet version (DynaMight)](https://img.shields.io/nuget/v/DynaMight.svg?style=flat-square)](https://www.nuget.org/packages/DynaMight/)
+![Latest Deploy](https://github.com/22cans/DynaMight/actions/workflows/post_deploy/badge.svg)
+[![NuGet Downloads](https://img.shields.io/nuget/dt/DynaMight.svg)](https://www.nuget.org/packages/DynaMight/)
+
 DynaMight is a powerful library wrapper for Amazon's DynamoDB SDK, designed to simplify the usage of complex features. It provides a convenient way to execute atomic operations, implement pagination, and filter results.
 ​
 ## Features
