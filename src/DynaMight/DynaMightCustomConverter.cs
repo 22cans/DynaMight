@@ -37,9 +37,9 @@ public static class DynaMightCustomConverter
     private static void RegisterEnum(Type enumType)
     {
         var method = typeof(DynaMightCustomConverter).GetMethod(nameof(RegisterEnum),
-            BindingFlags.Public | BindingFlags.Static)!;
+            BindingFlags.Public | BindingFlags.Static, types: Type.EmptyTypes)!;
         method = method.MakeGenericMethod(enumType);
-        method.Invoke(null, null);
+        method.Invoke(null, Array.Empty<object>());
     }
 
     /// <summary>
@@ -60,9 +60,8 @@ public static class DynaMightCustomConverter
     /// <param name="converter">The <see cref="CustomConverter"/> for the enum.</param>
     /// <typeparam name="T">Enum's type</typeparam>
     public static void RegisterEnum<T>(CustomConverter converter)
-    {
-        DynamoValueConverter.Add(typeof(T), converter);
-    }
+        => DynamoValueConverter.Add(typeof(T), converter);
+
 
     private static void RegisterClass(Type type)
     {
