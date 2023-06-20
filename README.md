@@ -1,13 +1,18 @@
 # DynaMight
 
 [![NuGet version (DynaMight)](https://img.shields.io/nuget/v/DynaMight.svg?style=flat-square)](https://www.nuget.org/packages/DynaMight/)
-![Latest Deploy](https://github.com/22cans/DynaMight/actions/workflows/post_deploy/badge.svg)
+[![CI](https://github.com/22cans/DynaMight/actions/workflows/push.yml/badge.svg?event=release)](https://github.com/22cans/DynaMight/actions/workflows/push.yml?query=event%3Arelease)
 [![NuGet Downloads](https://img.shields.io/nuget/dt/DynaMight.svg)](https://www.nuget.org/packages/DynaMight/)
+![GitHub contributors](https://img.shields.io/github/contributors/22cans/DynaMight)
+![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/22cans/DynaMight)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/w/22cans/DynaMight)
+![GitHub Repo stars](https://img.shields.io/github/stars/22cans/DynaMight)
+![GitHub forks](https://img.shields.io/github/forks/22cans/DynaMight)
 
 DynaMight is a powerful library wrapper for Amazon's DynamoDB SDK, designed to simplify the usage of complex features. It provides a convenient way to execute atomic operations, implement pagination, and filter results.
 ​
 ## Features
-​
+
 - **Easier operations using builder:** DynaMight uses the builder pattern to make it easier to create the configurations for queries and atomic operations.
 - **More readable code:** DynaMight uses a fluent API pattern, which makes the code more readable.
 - **Effortless pagination and filtering:** Performing pagination and filtering in the DynamoDB SDK can be challenging. DynaMight abstracts away this complexity.
@@ -155,3 +160,7 @@ public async Task<List<Session>> BatchRead(CancellationToken cancellationToken)
 ## License
 ​
 This project is licensed under the [BSD 3-Clause License](LICENSE).
+
+## Contributors
+
+![GitHub Contributors Image](https://contrib.rocks/image?repo=22cans/DynaMight)
