@@ -22,6 +22,11 @@ public class DynaMightContext : DynamoDBContext, IDynaMightContext
     private readonly AmazonDynamoDBClient _client;
     private readonly DynamoDBContextConfig _config;
 
+    /// <summary>
+    /// The DynaMight implementation for the Amazon DynamoDBContext
+    /// </summary>
+    /// <param name="client">An <see cref="AmazonDynamoDBClient"/></param>
+    /// <param name="config">A <see cref="DynamoDBContextConfig"/></param>
     public DynaMightContext(AmazonDynamoDBClient client, DynamoDBContextConfig config) : base(client, config)
     {
         _client = client;
