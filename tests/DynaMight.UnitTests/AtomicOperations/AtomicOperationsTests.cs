@@ -34,10 +34,10 @@ public class AtomicOperationsTests
         var (field, attributeValue, dynamoDbEntry) = atomicOperation.GetValueExpression();
 
         atomicOperation.Should().NotBeNull();
-        atomicOperation.UpdateExpressionType.Should().Be("SET");
-        atomicOperation.GetUpdateExpression().Should().Be("#field = #field + :fieldIncrement");
+        atomicOperation.UpdateExpressionType.Should().Be("ADD");
+        atomicOperation.GetUpdateExpression().Should().Be("#field :field");
 
-        field.Should().Be(":fieldIncrement");
+        field.Should().Be(":field");
         attributeValue.Should().BeEquivalentTo(new AttributeValue { N = increment.ToString() });
         dynamoDbEntry!.AsInt().Should().Be(increment);
     }
@@ -51,10 +51,10 @@ public class AtomicOperationsTests
         var (field, attributeValue, dynamoDbEntry) = atomicOperation.GetValueExpression();
 
         atomicOperation.Should().NotBeNull();
-        atomicOperation.UpdateExpressionType.Should().Be("SET");
-        atomicOperation.GetUpdateExpression().Should().Be("#field = #field + :fieldIncrement");
+        atomicOperation.UpdateExpressionType.Should().Be("ADD");
+        atomicOperation.GetUpdateExpression().Should().Be("#field :field");
 
-        field.Should().Be(":fieldIncrement");
+        field.Should().Be(":field");
         attributeValue.Should().BeEquivalentTo(new AttributeValue { N = increment.ToString() });
         dynamoDbEntry!.AsInt().Should().Be(increment);
     }
