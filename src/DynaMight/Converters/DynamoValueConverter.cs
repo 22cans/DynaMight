@@ -148,7 +148,7 @@ public static class DynamoValueConverter
 
         foreach (var property in typeof(T).GetProperties())
         {
-            if (property.GetCustomAttributes(typeof(DynamoDBIgnoreAttribute)).Any())
+            if (property.GetCustomAttributes(typeof(DynamoDBIgnoreAttribute)).Any() || !property.CanWrite)
                 continue;
 
             if (!dict.ContainsKey(property.Name))
