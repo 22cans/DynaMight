@@ -40,7 +40,9 @@ public class AtomicBuilder : DynamoBuilder, IAtomicBuilder
             _atomicOperations.Add(atomicOperation.UpdateExpressionType, new List<IAtomicOperation>());
 
         _atomicOperations[atomicOperation.UpdateExpressionType].Add(atomicOperation);
-        AddValueExpression(atomicOperation.GetValueExpression());
+        if (atomicOperation.UpdateExpressionType != "REMOVE")
+            AddValueExpression(atomicOperation.GetValueExpression());
+
         return this;
     }
 
