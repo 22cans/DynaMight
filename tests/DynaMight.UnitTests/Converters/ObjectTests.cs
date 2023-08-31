@@ -31,7 +31,8 @@ public class ObjectTests
                             { "InternalString", new AttributeValue { S = "internal string value" } }
                         }
                     }
-                }
+                },
+                { "DateTimeValue", new AttributeValue { S = "2023-08-29T15:44:27" } }
             });
 
         result.Should().NotBeNull();
@@ -87,7 +88,9 @@ public class ObjectTests
                             { "InternalString", new AttributeValue { S = "another string value" } }
                         }
                     }
-                }
+                },
+                { "DateTimeValue", new AttributeValue { S = "2023-08-29T15:44:27" } },
+                { "DateTimeNullableValue", new AttributeValue { S = "2023-08-29T15:44:27" } },
             });
 
         result.Should().NotBeNull();
@@ -103,7 +106,9 @@ public class ObjectTests
             TestAttributeEnumNullableValue = DynaMightTestClass.TestAttributeEnum.ValueWithAttribute1,
             InternalClassValue = new DynaMightTestClass.InternalClass { InternalString = "internal string value" },
             InternalClassNullableValue = new DynaMightTestClass.InternalClass
-                { InternalString = "another string value" }
+                { InternalString = "another string value" },
+            DateTimeValue = DateTime.Parse("2023-08-29T15:44:27"),
+            DateTimeNullableValue = DateTime.Parse("2023-08-29T15:44:27")
         });
     }
 

@@ -26,6 +26,8 @@ public class DynaMightTestClass
     public List<string>? StringListNullableValue { get; set; }
     public InternalClass InternalClassValue { get; set; } = default!;
     public InternalClass? InternalClassNullableValue { get; set; }
+    public DateTime DateTimeValue { get; set; } = DateTime.Parse("2023-08-29T15:44:27");
+    public DateTime? DateTimeNullableValue { get; set; }
 
     [DynamoDBIgnore] public InternalClassNotSerializable? IgnoreClass { get; set; }
 

@@ -54,6 +54,8 @@ public class ClassAttributeValueTests
                 }
             },
             { "InternalClassNullableValue", new AttributeValue { NULL = true } },
+            { "DateTimeValue", new AttributeValue { S = "2023-08-29T15:44:27" } },
+            { "DateTimeNullableValue", new AttributeValue { NULL = true } },
         });
     }
 }

@@ -64,6 +64,14 @@ public static class DynamoValueConverter
                 ToDynamoDbEntry = v => (List<string>)v
             }
         },
+        {
+            typeof(DateTime), new CustomConverter
+            {
+                ToAttributeValue = v => new AttributeValue { S = ((DateTime)v).ToString("s") },
+                ToObject = v => DateTime.Parse(v.S),
+                ToDynamoDbEntry = v => (DateTime)v
+            }
+        },
     };
 
     /// <summary>
