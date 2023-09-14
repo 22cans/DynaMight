@@ -12,9 +12,7 @@ public interface IDynamoBuilder
     /// Adds a named expression in the builder
     /// </summary>
     /// <param name="tuple">A tuple containing the key and value</param>
-    /// <returns>True if the field was add successfully. If false, it means that the field was not inserted (probably
-    /// because it was already there).</returns>
-    bool AddNameExpression((string key, string value) tuple);
+    void AddNameExpression((string key, string value) tuple);
     /// <summary>
     /// Adds a value expression in the builder
     /// </summary>

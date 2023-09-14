@@ -37,13 +37,12 @@ public abstract class DynamoBuilder : IDynamoBuilder
     private IDynamoCriteria? _dynamoCriteria;
 
     /// <inheritdoc />
-    public bool AddNameExpression((string key, string value) tuple)
+    public void AddNameExpression((string key, string value) tuple)
     {
-        if (tuple.key.Length == 1 || Names.ContainsKey(tuple.key))
-            return false;
+        if (Names.ContainsKey(tuple.key))
+            return;
         
         Names.Add(tuple);
-        return true;
     }
 
     /// <inheritdoc />
