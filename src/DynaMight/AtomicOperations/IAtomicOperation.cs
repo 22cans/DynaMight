@@ -26,5 +26,5 @@ public interface IAtomicOperation
     /// Gets the value's for the operation
     /// </summary>
     /// <returns>The value's value</returns>
-    (string, AttributeValue AttributeValue, DynamoDBEntry?) GetValueExpression();
+    (string key, AttributeValue AttributeValue, DynamoDBEntry? dynamoDbEntry) GetValueExpression();
 }
