@@ -19,7 +19,7 @@ public sealed class RemoveFieldOperation : IAtomicOperation
     public (string key, string value) GetNameExpression() => ($"#{FieldName}", FieldName);
 
     /// <inheritdoc />
-    public (string, AttributeValue AttributeValue, DynamoDBEntry?) GetValueExpression() => (string.Empty, null!, null);
+    public (string key, AttributeValue AttributeValue, DynamoDBEntry? dynamoDbEntry) GetValueExpression() => (string.Empty, null!, null);
 
     /// <summary>
     /// Removes a property from the register in the DynamoDB.
