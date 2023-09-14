@@ -276,6 +276,28 @@ public class AtomicBuilderTests
     }
     
     [Fact]
+    public void AddTwoOperationsForSameField_KeepsTheFirst_AndCriteriaBefore()
+    {
+        var builder = AtomicBuilder
+            .Create()
+            .AddCriteria(new NotExistsDynamoCriteria(Field2Name))
+            .AddOperation(new SetAtomicOperation<long>(Field2Name, Field2Value))
+            .AddOperation(new SetAtomicOperation<long>(Field2Name, 0));
+
+        var config = builder.Build();
+        config.UpdateExpression.Should().Be($"SET #{Field2Name} = :{Field2Name}");
+
+        config.ExpressionAttributeNames.Should().BeEquivalentTo(new Dictionary<string, string>
+        {
+            { $"#{Field2Name}", Field2Name }
+        });
+        config.ExpressionAttributeValues.Should().BeEquivalentTo(new Dictionary<string, AttributeValue>
+        {
+            { $":{Field2Name}", new AttributeValue { N = Field2Value.ToString() } }
+        });
+    }
+    
+    [Fact]
     public void AddOperationWithEmptyKeyField_DontAdd()
     {
         var builder = AtomicBuilder

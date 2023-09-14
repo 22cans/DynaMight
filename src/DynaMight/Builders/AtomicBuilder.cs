@@ -33,11 +33,18 @@ public class AtomicBuilder : DynamoBuilder, IAtomicBuilder
     /// <inheritdoc />
     public IAtomicBuilder AddOperation(IAtomicOperation atomicOperation)
     {
-        if (!AddNameExpression(atomicOperation.GetNameExpression()))
+        var nameExpression = atomicOperation.GetNameExpression();
+        if (nameExpression.key.Length == 1) // If the key is passed as a empty string
             return this;
+
+        AddNameExpression(nameExpression);
 
         if (!_atomicOperations.ContainsKey(atomicOperation.UpdateExpressionType))
             _atomicOperations.Add(atomicOperation.UpdateExpressionType, new List<IAtomicOperation>());
+
+        var valueExpression = atomicOperation.GetValueExpression();
+        if (Values.ContainsKey(valueExpression.key))
+            return this;
 
         _atomicOperations[atomicOperation.UpdateExpressionType].Add(atomicOperation);
         if (atomicOperation.UpdateExpressionType != "REMOVE")
