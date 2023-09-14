@@ -33,8 +33,9 @@ public class AtomicBuilder : DynamoBuilder, IAtomicBuilder
     /// <inheritdoc />
     public IAtomicBuilder AddOperation(IAtomicOperation atomicOperation)
     {
+        const string emptyName = "#";
         var nameExpression = atomicOperation.GetNameExpression();
-        if (nameExpression.key.Length == 1) // If the key is passed as a empty string
+        if (nameExpression.key == emptyName) // If the key is passed as a empty string
             return this;
 
         AddNameExpression(nameExpression);
