@@ -3,7 +3,7 @@ namespace DynaMight.Criteria;
 /// <summary>
 /// Creates a `contains` criteria for the filter.
 /// </summary>
-public class ContainsDynamoCriteria<T> : BinaryDynamoCriteria //: UnaryFunctionWithValueDynamoCriteria<T>
+public class ContainsDynamoCriteria<T> : BinaryDynamoCriteria
 {
     /// <summary>
     /// Creates a `contains` criteria for the filter.

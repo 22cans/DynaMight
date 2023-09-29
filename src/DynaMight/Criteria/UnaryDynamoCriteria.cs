@@ -9,6 +9,7 @@ public abstract class UnaryDynamoCriteria : DynamoCriteria
 {
     private readonly IDynamoCriteria _criteria;
     private readonly bool _useParenthesis;
+    private const string BlankSpace = " ";
 
     /// <summary>
     /// Unary operator
@@ -35,5 +36,5 @@ public abstract class UnaryDynamoCriteria : DynamoCriteria
 
     /// <inheritdoc />
     public override string ToString() =>
-        $"{Operator}{(_useParenthesis ? "" : " ")}{_criteria.ToString(_useParenthesis)}";
+        $"{Operator}{(_useParenthesis ? string.Empty : BlankSpace)}{_criteria.ToString(_useParenthesis)}";
 }
