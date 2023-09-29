@@ -77,6 +77,14 @@ public class CriteriaTests
     }
 
     [Fact]
+    public void Not()
+    {
+        var criteria = new NotDynamoCriteria(new EqualDynamoCriteria<string>(FieldName, FieldValue));
+        criteria.Should().NotBeNull();
+        criteria.ToString().Should().MatchRegex($"NOT\\(\\#{FieldName} = :{FieldName}_.{{32}}\\)");
+    }
+
+    [Fact]
     public void NotExists()
     {
         var criteria = new NotExistsDynamoCriteria(FieldName);
