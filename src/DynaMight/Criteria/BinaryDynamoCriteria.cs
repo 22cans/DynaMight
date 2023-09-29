@@ -12,8 +12,15 @@ public abstract class BinaryDynamoCriteria : DynamoCriteria
     /// </summary>
     protected abstract string Operator { get; }
 
-    private readonly IDynamoCriteria _leftCriteria;
-    private readonly IDynamoCriteria _rightCriteria;
+    /// <summary>
+    /// Left criteria for the binary operation
+    /// </summary>
+    protected readonly IDynamoCriteria LeftCriteria;
+    
+    /// <summary>
+    /// Right criteria for the binary operation
+    /// </summary>
+    protected readonly IDynamoCriteria RightCriteria;
 
     /// <summary>
     /// Creates a binary criteria, with two inner criteria, concatenated using the <see cref="Operator"/>
@@ -22,8 +29,8 @@ public abstract class BinaryDynamoCriteria : DynamoCriteria
     /// <param name="rightCriteria">Right inner criteria</param>
     protected BinaryDynamoCriteria(IDynamoCriteria leftCriteria, IDynamoCriteria rightCriteria)
     {
-        _leftCriteria = leftCriteria;
-        _rightCriteria = rightCriteria;
+        LeftCriteria = leftCriteria;
+        RightCriteria = rightCriteria;
     }
 
     /// <inheritdoc />
@@ -31,13 +38,13 @@ public abstract class BinaryDynamoCriteria : DynamoCriteria
     {
         base.UseAtomicOperationBuilder(builder);
 
-        _leftCriteria.UseAtomicOperationBuilder(builder);
-        _rightCriteria.UseAtomicOperationBuilder(builder);
+        LeftCriteria.UseAtomicOperationBuilder(builder);
+        RightCriteria.UseAtomicOperationBuilder(builder);
     }
 
     /// <inheritdoc />
     public override string ToString()
     {
-        return $"{_leftCriteria} {Operator} {_rightCriteria}";
+        return $"{LeftCriteria} {Operator} {RightCriteria}";
     }
 }

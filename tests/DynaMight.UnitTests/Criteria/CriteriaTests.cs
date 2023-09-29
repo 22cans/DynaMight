@@ -29,6 +29,14 @@ public class CriteriaTests
     }
     
     [Fact]
+    public void In()
+    {
+        var criteria = new InDynamoCriteria<string>(FieldName, new[]{ FieldValue, FieldValue });
+        criteria.Should().NotBeNull();
+        criteria.ToString().Should().MatchRegex($"\\#{FieldName} IN \\(:{FieldName}_.{{32}}, :{FieldName}_.{{32}}\\)");
+    }
+
+    [Fact]
     public void Equal()
     {
         var criteria = new EqualDynamoCriteria<string>(FieldName, FieldValue);
@@ -76,6 +84,14 @@ public class CriteriaTests
         criteria.ToString().Should().MatchRegex("attribute_not_exists\\(\\#field\\)");
     }
     
+    [Fact]
+    public void Exists()
+    {
+        var criteria = new ExistsDynamoCriteria(FieldName);
+        criteria.Should().NotBeNull();
+        criteria.ToString().Should().MatchRegex("attribute_exists\\(\\#field\\)");
+    }
+
     [Fact]
     public void Or()
     {
