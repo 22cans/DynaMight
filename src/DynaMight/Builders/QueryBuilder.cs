@@ -13,6 +13,7 @@ public class QueryBuilder : DynamoBuilder, IQueryBuilder
     private string? _pageToken;
     private bool _sortDescending;
     private string? _indexName;
+    private bool _consistentRead;
 
     /// <summary>
     /// Creates a new Query Builder
@@ -78,6 +79,13 @@ public class QueryBuilder : DynamoBuilder, IQueryBuilder
         _sortDescending = true;
         return this;
     }
+    
+    /// <inheritdoc />
+    public IQueryBuilder ConsistentRead()
+    {
+        _consistentRead = true;
+        return this;
+    }
 
     /// <inheritdoc />
     public IQueryBuilder SetIndexName(string? indexName)
@@ -113,6 +121,7 @@ public class QueryBuilder : DynamoBuilder, IQueryBuilder
             Limit = _pageSize,
             PaginationToken = _pageToken,
             BackwardSearch = _sortDescending,
-            FilterExpression = useFilter ? BuildExpression() : null
+            FilterExpression = useFilter ? BuildExpression() : null,
+            ConsistentRead = _consistentRead
         };
 }

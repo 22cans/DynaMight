@@ -58,6 +58,12 @@ public interface IQueryBuilder : IDynamoBuilder
     /// <returns>The QueryBuilder (for a fluent API usage)</returns>
     IQueryBuilder OrderByDescending();
     /// <summary>
+    /// Sets the Query to use Strongly Consistent Reads.
+    /// </summary>
+    /// <remarks>Check https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.ReadConsistency.html for more information</remarks>
+    /// <returns>The QueryBuilder (for a fluent API usage)</returns>
+    IQueryBuilder ConsistentRead();
+    /// <summary>
     /// Sets the Index name, in case you are using a different index for the query
     /// </summary>
     /// <param name="indexName">The index name to be used</param>
