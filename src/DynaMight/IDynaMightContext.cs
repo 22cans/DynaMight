@@ -61,11 +61,26 @@ public interface IDynaMightContext : IDynamoDBContext
     /// <returns>An <see cref="IBatchGet{T}"/> implementation</returns>
     IBatchGet<T> CreateBatchGet<T>();
     /// <summary>
+    /// Creates a BatchGet with DynamoDB's default implementation
+    /// </summary>
+    /// <param name="config">The DynamoDBOperationConfig for the batch.</param>
+    /// <typeparam name="T">C# object type</typeparam>
+    /// <returns>An <see cref="IBatchGet{T}"/> implementation</returns>
+    new IBatchGet<T> CreateBatchGet<T>(DynamoDBOperationConfig config);
+    /// <summary>
     /// Creates a BatchWrite with DynamoDB's default implementation
     /// </summary>
     /// <typeparam name="T">C# object type</typeparam>
     /// <returns>An <see cref="IBatchWrite{T}"/> implementation</returns>
-    IBatchWrite<T> CreateBatchWrite<T>();/// <summary>
+    IBatchWrite<T> CreateBatchWrite<T>();
+    /// <summary>
+    /// Creates a BatchWrite with DynamoDB's default implementation
+    /// </summary>
+    /// <param name="config">The DynamoDBOperationConfig for the batch.</param>
+    /// <typeparam name="T">C# object type</typeparam>
+    /// <returns>An <see cref="IBatchWrite{T}"/> implementation</returns>
+    new IBatchWrite<T> CreateBatchWrite<T>(DynamoDBOperationConfig config);
+    /// <summary>
     /// Creates a MultiTable BatchGet with DynamoDB's default implementation
     /// </summary>
     /// <param name="batches">The batches that will be added to execution</param>

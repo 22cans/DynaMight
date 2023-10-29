@@ -42,12 +42,30 @@ public class DynaMightContext : DynamoDBContext, IDynaMightContext
         => new DefaultBatchGet<T>(base.CreateBatchGet<T>());
 
     /// <summary>
+    /// Creates a DynamoDB BatchGet
+    /// </summary>
+    /// <param name="config">The DynamoDBOperationConfig for the batch.</param>
+    /// <typeparam name="T">Mapped type to DynamoDB item</typeparam>
+    /// <returns>DynamoDB BatchGet</returns>
+    public new IBatchGet<T> CreateBatchGet<T>(DynamoDBOperationConfig config)
+        => new DefaultBatchGet<T>(base.CreateBatchGet<T>(config));
+
+    /// <summary>
     /// Creates a DynamoDB BatchWrite
     /// </summary>
     /// <typeparam name="T">Mapped type to DynamoDB item</typeparam>
     /// <returns>DynamoDB BatchWrite</returns>
     public new IBatchWrite<T> CreateBatchWrite<T>()
         => new DefaultBatchWrite<T>(base.CreateBatchWrite<T>());
+
+    /// <summary>
+    /// Creates a DynamoDB BatchWrite
+    /// </summary>
+    /// <param name="config">The DynamoDBOperationConfig for the batch.</param>
+    /// <typeparam name="T">Mapped type to DynamoDB item</typeparam>
+    /// <returns>DynamoDB BatchWrite</returns>
+    public new IBatchWrite<T> CreateBatchWrite<T>(DynamoDBOperationConfig config)
+        => new DefaultBatchWrite<T>(base.CreateBatchWrite<T>(config));
 
     /// <summary>
     /// Creates a DynamoDB MultiTable BatchGet
