@@ -8,36 +8,35 @@ namespace DynaMight.AtomicOperations;
 /// </summary>
 public class CustomOperation : IAtomicOperation
 {
-    private readonly Func<string> _updateExpressionTypeFunc;
-    private readonly Func<string> _getUpdateExpressionFunc;
-    private readonly Func<(string, string)> _getNameExpressionFunc;
-    private readonly Func<(string, AttributeValue, DynamoDBEntry?)> _getValueExpressionFunc;
+    private readonly string _getUpdateExpression;
+    private readonly (string, string) _getNameExpressionFunc;
+    private readonly (string, AttributeValue, DynamoDBEntry?) _getValueExpressionFunc;
 
     /// <inheritdoc />
-    public string UpdateExpressionType => _updateExpressionTypeFunc();
+    public string UpdateExpressionType {get; }
     
     /// <inheritdoc />
-    public string GetUpdateExpression() => _getUpdateExpressionFunc();
+    public string GetUpdateExpression() => _getUpdateExpression;
 
     /// <inheritdoc />
-    public (string key, string value) GetNameExpression() => _getNameExpressionFunc();
+    public (string key, string value) GetNameExpression() => _getNameExpressionFunc;
 
     /// <inheritdoc />
     public (string key, AttributeValue AttributeValue, DynamoDBEntry? dynamoDbEntry) GetValueExpression() =>
-        _getValueExpressionFunc();
+        _getValueExpressionFunc;
 
     /// <summary>
     /// Creates a custom operation, that receives Func to execute the internal methods.
     /// </summary>
-    /// <param name="updateExpressionTypeFunc">Func that defines <see cref="UpdateExpressionType"/>.</param>
-    /// <param name="getUpdateExpressionFunc">Func that defines <see cref="GetUpdateExpression"/>.</param>
-    /// <param name="getNameExpressionFunc">Func that defines <see cref="GetNameExpression"/>.</param>
-    /// <param name="getValueExpressionFunc">Func that defines <see cref="GetValueExpression"/>.</param>
-    public CustomOperation(Func<string> updateExpressionTypeFunc, Func<string> getUpdateExpressionFunc,
-        Func<(string, string)> getNameExpressionFunc, Func<(string, AttributeValue, DynamoDBEntry?)> getValueExpressionFunc)
+    /// <param name="updateExpressionType">Value for <see cref="UpdateExpressionType"/>.</param>
+    /// <param name="getUpdateExpression">Value for <see cref="GetUpdateExpression"/>.</param>
+    /// <param name="getNameExpressionFunc">Value for <see cref="GetNameExpression"/>.</param>
+    /// <param name="getValueExpressionFunc">Value for <see cref="GetValueExpression"/>.</param>
+    public CustomOperation(string updateExpressionType, string getUpdateExpression,
+        (string, string) getNameExpressionFunc, (string, AttributeValue, DynamoDBEntry?) getValueExpressionFunc)
     {
-        _updateExpressionTypeFunc = updateExpressionTypeFunc;
-        _getUpdateExpressionFunc = getUpdateExpressionFunc;
+        UpdateExpressionType = updateExpressionType;
+        _getUpdateExpression = getUpdateExpression;
         _getNameExpressionFunc = getNameExpressionFunc;
         _getValueExpressionFunc = getValueExpressionFunc;
     }

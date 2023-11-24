@@ -343,10 +343,10 @@ public class AtomicBuilderTests
         var builder = AtomicBuilder
             .Create()
             .AddOperation(new CustomOperation(
-                () => "SET",
-                () => $"#{Field1Name} = :{Field1Name} + #{Field2Name}",
-                () => ($"#{Field1Name}", Field1Name),
-                () => ($":{Field1Name}", DynamoValueConverter.ToAttributeValue(Field1Value),
+                "SET",
+                $"#{Field1Name} = :{Field1Name} + #{Field2Name}",
+                ($"#{Field1Name}", Field1Name),
+                ($":{Field1Name}", DynamoValueConverter.ToAttributeValue(Field1Value),
                     DynamoValueConverter.ToDynamoDbEntry(Field1Value))
             ))
             .AddOperation(new ReferenceOperation(Field2Name));
