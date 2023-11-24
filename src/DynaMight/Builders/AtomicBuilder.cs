@@ -40,6 +40,9 @@ public class AtomicBuilder : DynamoBuilder, IAtomicBuilder
 
         AddNameExpression(nameExpression);
 
+        if (string.IsNullOrEmpty(atomicOperation.UpdateExpressionType))
+            return this;
+
         if (!_atomicOperations.ContainsKey(atomicOperation.UpdateExpressionType))
             _atomicOperations.Add(atomicOperation.UpdateExpressionType, new List<IAtomicOperation>());
 

@@ -2,6 +2,7 @@ using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.Model;
 using DynaMight.AtomicOperations;
 using DynaMight.Builders;
+using DynaMight.Converters;
 using DynaMight.Criteria;
 using FluentAssertions;
 
@@ -137,7 +138,7 @@ public class AtomicBuilderTests
         var config = builder.Build();
         config.TableName.Should().Be("22cans_DynaMightTestClass");
     }
-    
+
     [Fact]
     public void SetTableName_WhenConfigEmpty()
     {
@@ -149,7 +150,7 @@ public class AtomicBuilderTests
         var config = builder.Build();
         config.TableName.Should().Be("DynaMightTestClass");
     }
-    
+
     [Fact]
     public void Operation_WhenConditionTrue()
     {
@@ -171,7 +172,8 @@ public class AtomicBuilderTests
         });
     }
 
-    [Fact] public void Operation_WhenConditionFalse()
+    [Fact]
+    public void Operation_WhenConditionFalse()
     {
         var builder = AtomicBuilder
             .Create()
@@ -205,7 +207,7 @@ public class AtomicBuilderTests
             { $":{Field2Name}", new AttributeValue { N = Field2Value.ToString() } }
         });
     }
-    
+
     [Fact]
     public void TwoOperationsSameKind()
     {
@@ -229,7 +231,7 @@ public class AtomicBuilderTests
             { $":{Field3Name}", new AttributeValue { N = Field3Value.ToString() } }
         });
     }
-    
+
     [Fact]
     public void TwoOperationsDifferentKind()
     {
@@ -253,7 +255,7 @@ public class AtomicBuilderTests
             { $":{Field3Name}", new AttributeValue { N = Field3Value.ToString() } }
         });
     }
-    
+
     [Fact]
     public void AddTwoOperationsForSameField_KeepsTheFirst()
     {
@@ -274,7 +276,7 @@ public class AtomicBuilderTests
             { $":{Field2Name}", new AttributeValue { N = Field2Value.ToString() } }
         });
     }
-    
+
     [Fact]
     public void AddTwoOperationsForSameField_KeepsTheFirst_AndCriteriaBefore()
     {
@@ -296,7 +298,7 @@ public class AtomicBuilderTests
             { $":{Field2Name}", new AttributeValue { N = Field2Value.ToString() } }
         });
     }
-    
+
     [Fact]
     public void AddOperationWithEmptyKeyField_DontAdd()
     {
@@ -315,6 +317,51 @@ public class AtomicBuilderTests
         config.ExpressionAttributeValues.Should().BeEquivalentTo(new Dictionary<string, AttributeValue>
         {
             { $":{Field2Name}", new AttributeValue { N = Field2Value.ToString() } }
+        });
+    }
+
+    [Fact]
+    public void AddReferenceOperation()
+    {
+        var builder = AtomicBuilder
+            .Create()
+            .AddOperation(new ReferenceOperation(Field1Name));
+
+        var config = builder.Build();
+        config.UpdateExpression.Should().BeEmpty();
+
+        config.ExpressionAttributeNames.Should().BeEquivalentTo(new Dictionary<string, string>
+        {
+            { $"#{Field1Name}", Field1Name }
+        });
+        config.ExpressionAttributeValues.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void AddCustomOperationWithReference()
+    {
+        var builder = AtomicBuilder
+            .Create()
+            .AddOperation(new CustomOperation(
+                "SET",
+                $"#{Field1Name} = :{Field1Name} + #{Field2Name}",
+                ($"#{Field1Name}", Field1Name),
+                ($":{Field1Name}", DynamoValueConverter.ToAttributeValue(Field1Value),
+                    DynamoValueConverter.ToDynamoDbEntry(Field1Value))
+            ))
+            .AddOperation(new ReferenceOperation(Field2Name));
+
+        var config = builder.Build();
+        config.UpdateExpression.Should().Be($"SET #{Field1Name} = :{Field1Name} + #{Field2Name}");
+
+        config.ExpressionAttributeNames.Should().BeEquivalentTo(new Dictionary<string, string>
+        {
+            { $"#{Field1Name}", Field1Name },
+            { $"#{Field2Name}", Field2Name }
+        });
+        config.ExpressionAttributeValues.Should().BeEquivalentTo(new Dictionary<string, AttributeValue>
+        {
+            { $":{Field1Name}", new AttributeValue { S = Field1Value } }
         });
     }
 }
